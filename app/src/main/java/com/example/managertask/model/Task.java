@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity(tableName = "task_table")
 public class Task {
 
@@ -48,4 +50,5 @@ public class Task {
     public String getDescription() {
         return mDescription;
     }
+
 }

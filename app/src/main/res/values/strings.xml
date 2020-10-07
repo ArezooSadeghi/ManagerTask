@@ -6,4 +6,5 @@
     <string name="doing_tab">DOING</string>
     <string name="todo_tab">TODO</string>
     <string name="empty_recyclerview">There is nothing to do</string>
+    <string name="title">Title</string>
 </resources>
