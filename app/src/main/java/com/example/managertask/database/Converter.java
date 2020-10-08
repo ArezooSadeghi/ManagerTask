@@ -2,6 +2,8 @@ package com.example.managertask.database;
 
 import androidx.room.TypeConverter;
 
+import com.example.managertask.model.State;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,5 +44,16 @@ public class Converter {
     @TypeConverter
     public static String timestampToString(Timestamp timestamp) {
         return new SimpleDateFormat("hh:mm:ss").format(timestamp);
+    }
+
+    @TypeConverter
+    public static String enumToString(State state) {
+        return state.name();
+    }
+
+    @TypeConverter
+    public static State stringToEnum(String state) {
+        State s = State.valueOf(state);
+        return s;
     }
 }

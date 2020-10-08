@@ -28,15 +28,20 @@ public class Task {
     @ColumnInfo(name = "time")
     private Timestamp mTime;
 
+    @ColumnInfo(name = "state")
+    private State mState;
+
     public Task() {
         mDate = new Date();
         mTime = new Timestamp(mDate.getTime());
+        mState = State.DOING;
     }
 
     public Task(String title, String description) {
         mTitle = title;
         mDescription = description;
         mDate = new Date();
+        mState = State.DOING;
     }
 
     public void setTitle(String title) {
@@ -45,6 +50,10 @@ public class Task {
 
     public void setTime(Timestamp time) {
         mTime = time;
+    }
+
+    public void setState(State state) {
+        mState = state;
     }
 
     public void setDescription(String description) {
@@ -69,6 +78,10 @@ public class Task {
 
     public String getTitle() {
         return mTitle;
+    }
+
+    public State getState() {
+        return mState;
     }
 
     public String getDescription() {
