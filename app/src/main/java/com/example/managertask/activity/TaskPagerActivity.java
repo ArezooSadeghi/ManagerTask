@@ -13,8 +13,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.managertask.R;
-import com.example.managertask.adapter.TaskAdapter;
-import com.example.managertask.fragment.DialogAddNewTaskFragment;
+import com.example.managertask.fragment.NewTaskDialog;
 import com.example.managertask.fragment.DoingFragment;
 import com.example.managertask.fragment.DoneFragment;
 import com.example.managertask.fragment.TodoFragment;
@@ -48,7 +47,7 @@ public class TaskPagerActivity extends AppCompatActivity {
         mFabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogAddNewTaskFragment dialogAddNewTaskFragment = DialogAddNewTaskFragment.newInstance();
+                NewTaskDialog dialogAddNewTaskFragment = NewTaskDialog.newInstance();
                 dialogAddNewTaskFragment.show(getSupportFragmentManager(), TAG);
             }
         });

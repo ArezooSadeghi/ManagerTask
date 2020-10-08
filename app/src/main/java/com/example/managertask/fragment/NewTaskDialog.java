@@ -21,18 +21,20 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DialogAddNewTaskFragment extends DialogFragment {
+public class NewTaskDialog extends DialogFragment {
     private Button mButtonSave, mButtonDate, mButtonTime;
     private EditText mEditTextTitle, mEditTextDescription;
     private TaskDatabase mDatabase;
+    private Task mTask;
     public static final String TAG1 = "DANTF";
     public static final String TAG2 = "DANTF";
+    public static final int REQUEST_CODE_DATE_PICKER = 0;
 
-    public DialogAddNewTaskFragment() {
+    public NewTaskDialog() {
     }
 
-    public static DialogAddNewTaskFragment newInstance() {
-        DialogAddNewTaskFragment fragment = new DialogAddNewTaskFragment();
+    public static NewTaskDialog newInstance() {
+        NewTaskDialog fragment = new NewTaskDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -67,11 +69,11 @@ public class DialogAddNewTaskFragment extends DialogFragment {
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Task task = new Task();
-                task.setTitle(mEditTextTitle.getText().toString());
-                task.setDescription(mEditTextDescription.getText().toString());
+                mTask = new Task();
+                mTask.setTitle(mEditTextTitle.getText().toString());
+                mTask.setDescription(mEditTextDescription.getText().toString());
                 mDatabase = TaskDatabase.getInstance(getActivity());
-                mDatabase.taskDao().insert(task);
+                mDatabase.taskDao().insert(mTask);
                 dismiss();
             }
         });
@@ -79,7 +81,8 @@ public class DialogAddNewTaskFragment extends DialogFragment {
         mButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerFragment datePickerFragment = DatePickerFragment.newInstance();
+                DatePickerDialog datePickerFragment = DatePickerDialog.newInstance();
+                datePickerFragment.setTargetFragment(NewTaskDialog.this, REQUEST_CODE_DATE_PICKER);
                 datePickerFragment.show(getActivity().getSupportFragmentManager(), TAG1);
             }
         });
@@ -87,7 +90,7 @@ public class DialogAddNewTaskFragment extends DialogFragment {
         mButtonTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerFragment timePickerFragment = TimePickerFragment.newInstance();
+                TimePickerDialog timePickerFragment = TimePickerDialog.newInstance();
                 timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG2);
             }
         });
@@ -98,7 +101,7 @@ public class DialogAddNewTaskFragment extends DialogFragment {
         Date date = new Date();
         mButtonDate.setText(dateFormat.format(date));
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm:ss a");
         mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
     }
 }

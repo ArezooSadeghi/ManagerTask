@@ -4,6 +4,6 @@
     android:id="@+id/datepicker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.DatePickerFragment">
+    tools:context=".fragment.DatePickerDialog">
 
 </DatePicker>
