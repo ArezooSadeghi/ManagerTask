@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.managertask.R;
 import com.example.managertask.model.Task;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
@@ -51,7 +56,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
     }
 
     public class TaskHolder extends RecyclerView.ViewHolder {
-        private TextView mTextViewTitle, mTextViewDescription;
+        private TextView mTextViewTitle, mTextViewDate, mTextViewTime;
+        private Button mButtonFirstLetter;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,12 +66,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
         private void findViews(@NonNull View itemView) {
             mTextViewTitle = itemView.findViewById(R.id.txt_row_title);
-            mTextViewDescription = itemView.findViewById(R.id.txt_row_description);
+            mTextViewDate = itemView.findViewById(R.id.txt_date);
+            mTextViewTime = itemView.findViewById(R.id.txt_time);
+            mButtonFirstLetter = itemView.findViewById(R.id.fab_first_letter);
         }
 
         private void bindTask(Task task) {
             mTextViewTitle.setText(task.getTitle());
-            mTextViewDescription.setText(task.getDescription());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            Date date = task.getDate();
+            mTextViewDate.setText(dateFormat.format(date));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(task.getTime().getTime());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            mTextViewTime.setText(simpleDateFormat.format(calendar.getTime()));
+            mButtonFirstLetter.setText(task.getTitle().substring(0, 1));
         }
     }
 }

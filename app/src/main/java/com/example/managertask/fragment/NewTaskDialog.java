@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +29,8 @@ public class NewTaskDialog extends DialogFragment {
     private EditText mEditTextTitle, mEditTextDescription;
     private TaskDatabase mDatabase;
     private Task mTask;
+    private Date mUserSelectedDate;
+    private Timestamp mUserSelectedTime;
     public static final String TAG1 = "DANTF";
     public static final String TAG2 = "DANTF";
     public static final int REQUEST_CODE_DATE_PICKER = 0;
@@ -77,6 +78,8 @@ public class NewTaskDialog extends DialogFragment {
                 mTask = new Task();
                 mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
+                mTask.setDate(mUserSelectedDate);
+                mTask.setTime(mUserSelectedTime);
                 mDatabase = TaskDatabase.getInstance(getActivity());
                 mDatabase.taskDao().insert(mTask);
                 dismiss();
@@ -117,15 +120,15 @@ public class NewTaskDialog extends DialogFragment {
             return;
         }
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
-            Date userSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
+            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            mButtonDate.setText(dateFormat.format(userSelectedDate));
+            mButtonDate.setText(dateFormat.format(mUserSelectedDate));
         }
 
         if (requestCode == REQUEST_CODE_TIME_PICKER) {
-            Timestamp userSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerDialog.EXTRA_USER_SELECTED_TIME);
+            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerDialog.EXTRA_USER_SELECTED_TIME);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(userSelectedTime.getTime());
+            calendar.setTimeInMillis(mUserSelectedTime.getTime());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
         }
