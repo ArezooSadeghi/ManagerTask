@@ -1,8 +1,11 @@
 package com.example.managertask.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +19,7 @@ import com.example.managertask.R;
 import com.example.managertask.database.TaskDatabase;
 import com.example.managertask.model.Task;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,6 +33,7 @@ public class NewTaskDialog extends DialogFragment {
     public static final String TAG1 = "DANTF";
     public static final String TAG2 = "DANTF";
     public static final int REQUEST_CODE_DATE_PICKER = 0;
+    public static final int REQUEST_CODE_TIME_PICKER = 1;
 
     public NewTaskDialog() {
     }
@@ -91,6 +96,7 @@ public class NewTaskDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerFragment = TimePickerDialog.newInstance();
+                timePickerFragment.setTargetFragment(NewTaskDialog.this, REQUEST_CODE_TIME_PICKER);
                 timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG2);
             }
         });
@@ -101,7 +107,27 @@ public class NewTaskDialog extends DialogFragment {
         Date date = new Date();
         mButtonDate.setText(dateFormat.format(date));
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm:ss a");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        }
+        if (requestCode == REQUEST_CODE_DATE_PICKER) {
+            Date userSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            mButtonDate.setText(dateFormat.format(userSelectedDate));
+        }
+
+        if (requestCode == REQUEST_CODE_TIME_PICKER) {
+            Timestamp userSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerDialog.EXTRA_USER_SELECTED_TIME);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(userSelectedTime.getTime());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+        }
     }
 }
