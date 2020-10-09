@@ -98,7 +98,7 @@ public class NewTaskDialog extends DialogFragment {
         mButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerFragment = DatePickerDialog.newInstance();
+                DatePickerDialog datePickerFragment = DatePickerDialog.newInstance(new Date());
                 datePickerFragment.setTargetFragment(NewTaskDialog.this, REQUEST_CODE_DATE_PICKER);
                 datePickerFragment.show(getActivity().getSupportFragmentManager(), TAG1);
             }
@@ -107,7 +107,7 @@ public class NewTaskDialog extends DialogFragment {
         mButtonTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerFragment = TimePickerDialog.newInstance();
+                TimePickerDialog timePickerFragment = TimePickerDialog.newInstance(new Timestamp(new Date().getTime()));
                 timePickerFragment.setTargetFragment(NewTaskDialog.this, REQUEST_CODE_TIME_PICKER);
                 timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG2);
             }

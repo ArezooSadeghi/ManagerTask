@@ -24,14 +24,17 @@ import java.util.Date;
 
 public class TimePickerDialog extends DialogFragment {
     public static final String EXTRA_USER_SELECTED_TIME = "user selected time";
+    public static final String ARGS_TASK_TIME = "taskTime";
     private TimePicker mTimePicker;
+    private Timestamp mTaskTime;
 
     public TimePickerDialog() {
     }
 
-    public static TimePickerDialog newInstance() {
+    public static TimePickerDialog newInstance(Timestamp taskTime) {
         TimePickerDialog fragment = new TimePickerDialog();
         Bundle args = new Bundle();
+        args.putSerializable(ARGS_TASK_TIME, taskTime);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,6 +42,7 @@ public class TimePickerDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTaskTime = (Timestamp) getArguments().getSerializable(ARGS_TASK_TIME);
     }
 
     @NonNull
@@ -47,7 +51,7 @@ public class TimePickerDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.fragment_time_picker, null);
         findViews(view);
-        initViews();
+        initTimePicker();
         AlertDialog dialog = new AlertDialog.Builder(getActivity()).setView(view)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -62,6 +66,7 @@ public class TimePickerDialog extends DialogFragment {
                             sendResult(userSelectedTime);
                         } catch (Exception e) {
                         }
+                        dismiss();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -73,8 +78,10 @@ public class TimePickerDialog extends DialogFragment {
         mTimePicker = view.findViewById(R.id.timepicker);
     }
 
-    private void initViews() {
+    private void initTimePicker() {
+        Date date = new Date(mTaskTime.getTime());
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         mTimePicker.setCurrentHour(hour);

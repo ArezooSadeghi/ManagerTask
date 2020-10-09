@@ -26,13 +26,15 @@ public class DatePickerDialog extends DialogFragment {
     public static final String ARGS_TASK_DATE = "taskDate";
     public static final String EXTRA_USER_SELECTED_DATE = "com.example.managertask.user selected date";
     private DatePicker mDatePicker;
+    private Date mTaskDate;
 
     public DatePickerDialog() {
     }
 
-    public static DatePickerDialog newInstance() {
+    public static DatePickerDialog newInstance(Date taskDate) {
         DatePickerDialog fragment = new DatePickerDialog();
         Bundle args = new Bundle();
+        args.putSerializable(ARGS_TASK_DATE, taskDate);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,6 +42,7 @@ public class DatePickerDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTaskDate = (Date) getArguments().getSerializable(ARGS_TASK_DATE);
     }
 
     @NonNull
@@ -48,7 +51,7 @@ public class DatePickerDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.fragment_date_picker, null);
         findViews(view);
-        initViews();
+        initDatePicker();
         AlertDialog dialog = new AlertDialog.Builder(getActivity()).setView(view)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -59,6 +62,7 @@ public class DatePickerDialog extends DialogFragment {
                         GregorianCalendar calendar = new GregorianCalendar(year, month, dayOfMonth);
                         Date userSelectedDate = calendar.getTime();
                         sendResult(userSelectedDate);
+                        dismiss();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -69,9 +73,9 @@ public class DatePickerDialog extends DialogFragment {
     private void findViews(View view) {
         mDatePicker = view.findViewById(R.id.datepicker);
     }
-
-    private void initViews() {
+    public void initDatePicker() {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mTaskDate);
         int year = calendar.get(Calendar.YEAR);
         int monthOfYear = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
