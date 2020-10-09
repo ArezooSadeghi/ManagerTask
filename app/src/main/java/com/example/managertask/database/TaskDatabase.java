@@ -7,8 +7,9 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.example.managertask.model.Task;
+import com.example.managertask.model.User;
 
-@androidx.room.Database(entities = {Task.class}, version = 1, exportSchema = false)
+@androidx.room.Database(entities = {Task.class, User.class}, version = 1, exportSchema = false)
 @TypeConverters({Converter.class})
 public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase sDatabase;

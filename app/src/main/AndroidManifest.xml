@@ -9,13 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.TaskPagerActivity">
+        <activity android:name=".activity.SignupContainer"></activity>
+        <activity android:name=".activity.LoginContainer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.TaskPagerActivity"></activity>
     </application>
 
 </manifest>

@@ -8,10 +8,11 @@ import androidx.room.Update;
 
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
+import com.example.managertask.model.User;
 
 import java.util.List;
 
-@Dao
+@androidx.room.Dao
 public interface TaskDao {
 
     @Query("SELECT * FROM task_table")
@@ -27,6 +28,7 @@ public interface TaskDao {
     void insert(Task...tasks);
 
     @Delete
+
     void delete(Task...tasks);
 
     @Delete
@@ -34,4 +36,7 @@ public interface TaskDao {
 
     @Update
     void update(Task...tasks);
+
+    @Insert
+    void insert(User...users);
 }
