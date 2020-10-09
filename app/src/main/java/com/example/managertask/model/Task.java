@@ -32,16 +32,11 @@ public class Task {
     private State mState;
 
     public Task() {
-        mDate = new Date();
-        mTime = new Timestamp(mDate.getTime());
-        mState = State.DOING;
     }
 
     public Task(String title, String description) {
         mTitle = title;
         mDescription = description;
-        mDate = new Date();
-        mState = State.DOING;
     }
 
     public void setTitle(String title) {

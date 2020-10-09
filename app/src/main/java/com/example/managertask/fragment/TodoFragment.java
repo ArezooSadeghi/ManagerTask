@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +21,7 @@ public class TodoFragment extends Fragment {
     private RecyclerView mRecyclerViewTodo;
     private TaskDatabase mDatabase;
     private LinearLayout mLayoutEmptyRecyclerview;
+    private TaskAdapter mTodoAdapter;
 
     public TodoFragment() {
     }
@@ -60,8 +60,11 @@ public class TodoFragment extends Fragment {
         if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            TaskAdapter todoAdapter = new TaskAdapter(tasks, getActivity());
-            mRecyclerViewTodo.setAdapter(todoAdapter);
+            mTodoAdapter = new TaskAdapter(tasks, this);
+            mTodoAdapter.setTasks(tasks);
+            mTodoAdapter.notifyDataSetChanged();
+            mRecyclerViewTodo.setAdapter(mTodoAdapter);
         }
     }
 }
+

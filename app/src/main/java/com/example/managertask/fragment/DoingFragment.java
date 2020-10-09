@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.example.managertask.R;
 import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.TaskDatabase;
+import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class DoingFragment extends Fragment {
     private RecyclerView mRecyclerViewDoing;
     private TaskDatabase mDatabase;
     private LinearLayout mLayoutEmptyRecyclerview;
+    private TaskAdapter mDoingAdapter;
 
     public DoingFragment() {
     }
@@ -57,12 +59,17 @@ public class DoingFragment extends Fragment {
     private void initViews() {
         mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> tasks = mDatabase.taskDao().getAllTask();
-        if (tasks.size() == 0) {
+        List<Task> doingTasks = mDatabase.taskDao().getStateTasks(State.DOING);
+        if (doingTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            TaskAdapter doingAdapter = new TaskAdapter(tasks, getActivity());
-            mRecyclerViewDoing.setAdapter(doingAdapter);
+            if (mDoingAdapter == null) {
+                mDoingAdapter = new TaskAdapter(doingTasks, this);
+            } else {
+                mDoingAdapter.setTasks(doingTasks);
+                mDoingAdapter.notifyDataSetChanged();
+            }
+                mRecyclerViewDoing.setAdapter(mDoingAdapter);
+            }
         }
     }
-}

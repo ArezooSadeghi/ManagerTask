@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.managertask.R;
 import com.example.managertask.database.TaskDatabase;
+import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 
 import java.sql.Timestamp;
@@ -27,6 +29,7 @@ import java.util.Date;
 public class NewTaskDialog extends DialogFragment {
     private Button mButtonSave, mButtonDate, mButtonTime;
     private EditText mEditTextTitle, mEditTextDescription;
+    private CheckBox mCheckBoxDone;
     private TaskDatabase mDatabase;
     private Task mTask;
     private Date mUserSelectedDate;
@@ -67,6 +70,7 @@ public class NewTaskDialog extends DialogFragment {
         mButtonSave = view.findViewById(R.id.btn_save);
         mButtonDate = view.findViewById(R.id.btn_date);
         mButtonTime = view.findViewById(R.id.btn_time);
+        mCheckBoxDone = view.findViewById(R.id.checkbox_done);
         mEditTextTitle = view.findViewById(R.id.edittext_title);
         mEditTextDescription = view.findViewById(R.id.edittext_description);
     }
@@ -80,6 +84,11 @@ public class NewTaskDialog extends DialogFragment {
                 mTask.setDescription(mEditTextDescription.getText().toString());
                 mTask.setDate(mUserSelectedDate);
                 mTask.setTime(mUserSelectedTime);
+                if (mCheckBoxDone.isChecked()) {
+                    mTask.setState(State.DONE);
+                } else {
+                    mTask.setState(State.DOING);
+                }
                 mDatabase = TaskDatabase.getInstance(getActivity());
                 mDatabase.taskDao().insert(mTask);
                 dismiss();
