@@ -119,6 +119,14 @@ public class TaskInformationDialog extends DialogFragment {
                 timePickerDialog.show(getActivity().getSupportFragmentManager(), TAG_2);
             }
         });
+
+        mButtonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDatabase.taskDao().delete(mTask);
+                dismiss();
+            }
+        });
     }
 
     private void findViews(View view) {
