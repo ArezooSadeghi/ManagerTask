@@ -3,55 +3,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:background="@drawable/layout_bg"
     android:orientation="vertical"
     tools:context=".fragment.NewTaskDialog">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="12dp"
         android:text="@string/title"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/edittext_title"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:ems="20"
-        android:hint="Title" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp">
 
-    <EditText
-        android:id="@+id/edittext_description"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:layout_margin="8dp"
-        android:ems="20"
-        android:hint="Description" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edittext_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edittext_description"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:hint="Description" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btn_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp" />
 
     <Button
         android:id="@+id/btn_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp" />
 
     <CheckBox
         android:id="@+id/checkbox_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/text_checkbox" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="100dp">
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp">
 
         <Button
             android:id="@+id/btn_delete"
@@ -68,6 +89,7 @@
             android:layout_height="wrap_content"
             android:text="Save"
             android:textAllCaps="false" />
+
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
 </LinearLayout>

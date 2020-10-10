@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:background="@drawable/layout_bg"
     android:orientation="vertical"
     tools:context=".fragment.TaskInformationDialog">
 
@@ -10,48 +12,68 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="@string/title"
-        android:textSize="20sp" />
+        android:text="Title"
+        android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/title_task_information"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:ems="20"
-        android:hint="Your Title" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp">
 
-    <EditText
-        android:id="@+id/description_task_information"
-        android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/title_task_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_margin="5dp"
-        android:ems="20"
-        android:hint="Your Description" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description_task_information"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:hint="Description" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/date_task_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp" />
 
     <Button
         android:id="@+id/time_task_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp" />
 
     <CheckBox
         android:id="@+id/state_task_information"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/text_checkbox" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="70dp">
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp">
 
         <Button
             android:id="@+id/delete_task_information"
@@ -80,8 +102,6 @@
             android:textAllCaps="false"
             android:textSize="18sp" />
 
-
     </com.google.android.material.button.MaterialButtonToggleGroup>
-
 
 </LinearLayout>
