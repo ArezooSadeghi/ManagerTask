@@ -61,8 +61,6 @@ public class TodoFragment extends Fragment {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
             mTodoAdapter = new TaskAdapter(tasks, this);
-            mTodoAdapter.setTasks(tasks);
-            mTodoAdapter.notifyDataSetChanged();
             mRecyclerViewTodo.setAdapter(mTodoAdapter);
         }
     }

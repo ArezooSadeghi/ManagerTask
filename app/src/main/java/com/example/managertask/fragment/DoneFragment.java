@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
@@ -62,13 +61,10 @@ public class DoneFragment extends Fragment {
         if (doneTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            if (mDoneAdapter == null) {
-                mDoneAdapter = new TaskAdapter(doneTasks, this);
-            } else {
-                mDoneAdapter.setTasks(doneTasks);
-                mDoneAdapter.notifyDataSetChanged();
-            }
-                mRecyclerViewDone.setAdapter(mDoneAdapter);
-            }
+            mDoneAdapter = new TaskAdapter(doneTasks, this);
+            mRecyclerViewDone.setAdapter(mDoneAdapter);
         }
+
     }
+
+}

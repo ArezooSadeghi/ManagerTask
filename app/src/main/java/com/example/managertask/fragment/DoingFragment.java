@@ -63,13 +63,11 @@ public class DoingFragment extends Fragment {
         if (doingTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            if (mDoingAdapter == null) {
-                mDoingAdapter = new TaskAdapter(doingTasks, this);
-            } else {
-                mDoingAdapter.setTasks(doingTasks);
-                mDoingAdapter.notifyDataSetChanged();
-            }
-                mRecyclerViewDoing.setAdapter(mDoingAdapter);
-            }
+            mDoingAdapter = new TaskAdapter(doingTasks, this);
+            mRecyclerViewDoing.setAdapter(mDoingAdapter);
+
         }
+
     }
+}
+

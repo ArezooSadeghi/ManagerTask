@@ -10,7 +10,7 @@ import java.time.OffsetTime;
 import java.util.Date;
 
 @Entity(tableName = "task_table")
-public class Task {
+public class Task implements Comparable, Cloneable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -38,6 +38,34 @@ public class Task {
         mTitle = title;
         mDescription = description;
     }
+
+
+
+    @Override
+    public int compareTo(Object o) {
+        Task compare = (Task) o;
+
+        if (compare.getId() == this.getId())
+        {
+            return 0;
+        }
+        return 1;
+    }
+
+    @Override
+    public Task clone() {
+
+        Task clone;
+        try {
+            clone = (Task) super.clone();
+
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return clone;
+    }
+
 
     public void setTitle(String title) {
         mTitle = title;

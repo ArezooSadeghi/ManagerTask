@@ -12,8 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.managertask.DiffUtilCallBack;
 import com.example.managertask.R;
 import com.example.managertask.fragment.TaskInformationDialog;
 import com.example.managertask.model.Task;
@@ -28,6 +31,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
     public static final String TAG = "Edit";
     private List<Task> mTasks;
     private Fragment mFragment;
+    private TaskAdapter mTaskAdapter;
 
     public TaskAdapter(List<Task> tasks, Fragment fragment) {
         mTasks = tasks;
@@ -40,6 +44,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
     public void setTasks(List<Task> tasks) {
         mTasks = tasks;
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(tasks, getTasks()));
+        diffResult.dispatchUpdatesTo(this);
+        getTasks().clear();
+        this.getTasks().addAll(tasks);
     }
 
     @NonNull
@@ -83,6 +91,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
                 }
             });
         }
+
 
         private void findViews(@NonNull View itemView) {
             mTextViewTitle = itemView.findViewById(R.id.txt_row_title);
