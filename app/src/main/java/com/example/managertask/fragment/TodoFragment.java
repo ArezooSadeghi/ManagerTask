@@ -14,21 +14,25 @@ import com.example.managertask.R;
 import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.TaskDatabase;
 import com.example.managertask.model.Task;
+import com.example.managertask.model.User;
 
 import java.util.List;
 
 public class TodoFragment extends Fragment {
+    private static final String ARGS_USER = "user";
     private RecyclerView mRecyclerViewTodo;
     private TaskDatabase mDatabase;
     private LinearLayout mLayoutEmptyRecyclerview;
     private TaskAdapter mTodoAdapter;
+    private User mUser;
 
     public TodoFragment() {
     }
 
-    public static TodoFragment newInstance() {
+    public static TodoFragment newInstance(User user) {
         TodoFragment fragment = new TodoFragment();
         Bundle args = new Bundle();
+        args.putSerializable(ARGS_USER, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,6 +40,7 @@ public class TodoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUser = (User) getArguments().getSerializable(ARGS_USER);
     }
 
     @Override
@@ -56,7 +61,8 @@ public class TodoFragment extends Fragment {
     private void initViews() {
         mRecyclerViewTodo.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> tasks = mDatabase.getTaskDao().getAllTasks();
+        long userId = mDatabase.getUserDao().getUserId(mUser.getUsername(), mUser.getPassword());
+        List<Task> tasks = mDatabase.getTaskDao().getAllTasksForEveryUser(userId);
         if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {

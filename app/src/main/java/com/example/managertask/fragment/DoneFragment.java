@@ -15,21 +15,25 @@ import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.TaskDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
+import com.example.managertask.model.User;
 
 import java.util.List;
 
 public class DoneFragment extends Fragment {
+    private static final String ARGS_USER = "user";
     private RecyclerView mRecyclerViewDone;
     private TaskDatabase mDatabase;
     private LinearLayout mLayoutEmptyRecyclerview;
     private TaskAdapter mDoneAdapter;
+    private User mUser;
 
     public DoneFragment() {
     }
 
-    public static DoneFragment newInstance() {
+    public static DoneFragment newInstance(User user) {
         DoneFragment fragment = new DoneFragment();
         Bundle args = new Bundle();
+        args.putSerializable(ARGS_USER, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,6 +41,7 @@ public class DoneFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUser = (User) getArguments().getSerializable(ARGS_USER);
     }
 
     @Override
@@ -57,11 +62,12 @@ public class DoneFragment extends Fragment {
     private void initViews() {
         mRecyclerViewDone.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> doneTasks = mDatabase.getTaskDao().getStateTasks(State.DONE);
-        if (doneTasks.size() == 0) {
+        long userId = mDatabase.getUserDao().getUserId(mUser.getUsername(), mUser.getPassword());
+        List<Task> tasks = mDatabase.getTaskDao().getAllTasksForEveryUser(userId);
+        if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            mDoneAdapter = new TaskAdapter(doneTasks, this);
+            mDoneAdapter = new TaskAdapter(tasks, this);
             mRecyclerViewDone.setAdapter(mDoneAdapter);
         }
     }

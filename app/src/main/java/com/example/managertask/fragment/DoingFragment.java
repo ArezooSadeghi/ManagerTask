@@ -15,21 +15,26 @@ import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.TaskDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
+import com.example.managertask.model.User;
 
+import java.net.UnknownServiceException;
 import java.util.List;
 
 public class DoingFragment extends Fragment {
+    private static final String ARGS_USER = "user";
     private RecyclerView mRecyclerViewDoing;
     private TaskDatabase mDatabase;
     private LinearLayout mLayoutEmptyRecyclerview;
     private TaskAdapter mDoingAdapter;
+    private User mUser;
 
     public DoingFragment() {
     }
 
-    public static DoingFragment newInstance() {
+    public static DoingFragment newInstance(User user) {
         DoingFragment fragment = new DoingFragment();
         Bundle args = new Bundle();
+        args.putSerializable(ARGS_USER, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,6 +42,7 @@ public class DoingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUser = (User) getArguments().getSerializable(ARGS_USER);
     }
 
     @Override
@@ -57,11 +63,12 @@ public class DoingFragment extends Fragment {
     private void initViews() {
         mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> doingTasks = mDatabase.getTaskDao().getStateTasks(State.DOING);
-        if (doingTasks.size() == 0) {
+        long userId = mDatabase.getUserDao().getUserId(mUser.getUsername(), mUser.getPassword());
+        List<Task> tasks = mDatabase.getTaskDao().getAllTasksForEveryUser(userId);
+        if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            mDoingAdapter = new TaskAdapter(doingTasks, this);
+            mDoingAdapter = new TaskAdapter(tasks, this);
             mRecyclerViewDoing.setAdapter(mDoingAdapter);
         }
     }

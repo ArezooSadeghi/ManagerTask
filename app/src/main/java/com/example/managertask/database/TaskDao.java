@@ -26,6 +26,9 @@ public interface TaskDao {
     @Query("SELECT * FROM task_table INNER JOIN user_table ON userId = taskId")
     List<Task> getAllUserTasks();
 
+    @Query("SELECT * FROM task_table WHERE taskId=:userId")
+    List<Task> getAllTasksForEveryUser(long userId);
+
     @Insert
     void insert(Task... tasks);
 

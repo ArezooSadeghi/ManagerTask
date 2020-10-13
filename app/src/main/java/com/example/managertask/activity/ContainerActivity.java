@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.managertask.R;
 import com.example.managertask.fragment.LoginPage;
 import com.example.managertask.fragment.SignupPage;
+import com.example.managertask.model.User;
 
 public class ContainerActivity extends AppCompatActivity implements LoginPage.LoginCallbacks,
         SignupPage.SignupCallbacks, LoginPage.LoginCallbacksTaskPager {
@@ -43,8 +44,8 @@ public class ContainerActivity extends AppCompatActivity implements LoginPage.Lo
     }
 
     @Override
-    public void loginClicked() {
-        Intent intent = TaskPagerActivity.newIntent(this);
+    public void loginClicked(User user) {
+        Intent intent = TaskPagerActivity.newIntent(this, user);
         startActivity(intent);
     }
 }

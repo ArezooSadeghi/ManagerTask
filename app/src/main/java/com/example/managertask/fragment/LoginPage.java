@@ -74,16 +74,19 @@ public class LoginPage extends Fragment {
                             Toast.LENGTH_SHORT).show();
                 }
 
+                boolean flag = true;
                 for (User user:users) {
                     if (user.getUsername().equals(mEditTextUsename.getText().toString())
                     && (user.getPassword().equals(mEditTextPassword.getText().toString()))) {
-                        mCallbacksTaskPager.loginClicked();
-                        break;
-                    } else {
-                        Toast.makeText(getActivity(), "Username not found",
-                                Toast.LENGTH_SHORT).show();
+                        flag = false;
+                        mCallbacksTaskPager.loginClicked(user);
                         break;
                     }
+                }
+                if (flag == true) {
+                    Toast.makeText(getActivity(), "Username not found",
+                            Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -101,7 +104,7 @@ public class LoginPage extends Fragment {
     }
     
     public interface LoginCallbacksTaskPager {
-        void loginClicked();
+        void loginClicked(User user);
     }
 
     @Override

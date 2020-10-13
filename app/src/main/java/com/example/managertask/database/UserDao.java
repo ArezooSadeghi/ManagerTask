@@ -18,7 +18,10 @@ public interface UserDao {
     @Query("SELECT * FROM user_table")
     List<User> getAllUsers();
 
-   /* @Query("SELECT ")
-    List<Task> getAllTasksForEveryUsers();
-*/
+    @Query("SELECT * FROM user_table WHERE username=:username AND password=:password")
+    User getUser(String username, String password);
+
+    @Query("SELECT userId FROM user_table WHERE username=:username AND password=:password")
+    long getUserId(String username, String password);
+
 }

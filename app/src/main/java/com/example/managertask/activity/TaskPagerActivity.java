@@ -18,15 +18,19 @@ import com.example.managertask.fragment.NewTaskDialog;
 import com.example.managertask.fragment.DoingFragment;
 import com.example.managertask.fragment.DoneFragment;
 import com.example.managertask.fragment.TodoFragment;
+import com.example.managertask.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class TaskPagerActivity extends AppCompatActivity {
+    private static final String EXTRA_USER = "com.example.managertask.user";
+    private static final String TAG = "TPA";
     private ViewPager2 mViewPager;
     private TabLayout mTabLayout;
     private FloatingActionButton mFabAdd;
-    public static final String TAG = "TPA";
+    private User mUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class TaskPagerActivity extends AppCompatActivity {
         setListeners();
         initViews();
         Intent intent = this.getIntent();
+        mUser = (User) intent.getSerializableExtra(EXTRA_USER);
     }
 
     private void findViews() {
@@ -91,11 +96,11 @@ public class TaskPagerActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return DoneFragment.newInstance();
+                    return DoneFragment.newInstance(mUser);
                 case 1:
-                    return DoingFragment.newInstance();
+                    return DoingFragment.newInstance(mUser);
                 default:
-                    return TodoFragment.newInstance();
+                    return TodoFragment.newInstance(mUser);
             }
         }
 
@@ -105,7 +110,9 @@ public class TaskPagerActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, TaskPagerActivity.class);
+    public static Intent newIntent(Context context, User user) {
+        Intent intent = new Intent(context, TaskPagerActivity.class);
+        intent.putExtra(EXTRA_USER, user);
+        return intent;
     }
 }
