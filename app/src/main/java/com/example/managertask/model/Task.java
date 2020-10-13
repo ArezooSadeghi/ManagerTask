@@ -2,19 +2,18 @@ package com.example.managertask.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.OffsetTime;
 import java.util.Date;
 
-@Entity(tableName = "task_table")
-public class Task implements Comparable, Cloneable {
+@Entity(tableName = "task_table", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "userId", childColumns = "taskId"))
+public class Task {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private int mId;
+    @ColumnInfo(name = "taskId")
+    private int mTaskId;
 
     @ColumnInfo(name = "title")
     private String mTitle;
@@ -34,38 +33,14 @@ public class Task implements Comparable, Cloneable {
     public Task() {
     }
 
-    public Task(String title, String description) {
+    public Task(int taskId, String title, String description, Date date, Timestamp time, State state) {
+        mTaskId = taskId;
         mTitle = title;
         mDescription = description;
+        mDate = date;
+        mTime = time;
+        mState = state;
     }
-
-
-
-    @Override
-    public int compareTo(Object o) {
-        Task compare = (Task) o;
-
-        if (compare.getId() == this.getId())
-        {
-            return 0;
-        }
-        return 1;
-    }
-
-    @Override
-    public Task clone() {
-
-        Task clone;
-        try {
-            clone = (Task) super.clone();
-
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
-
-        return clone;
-    }
-
 
     public void setTitle(String title) {
         mTitle = title;
@@ -83,16 +58,16 @@ public class Task implements Comparable, Cloneable {
         mDescription = description;
     }
 
-    public void setId(int id) {
-        mId = id;
+    public void setTaskId(int taskId) {
+        mTaskId = taskId;
     }
 
     public void setDate(Date date) {
         mDate = date;
     }
 
-    public int getId() {
-        return mId;
+    public int getTaskId() {
+        return mTaskId;
     }
 
     public Timestamp getTime() {

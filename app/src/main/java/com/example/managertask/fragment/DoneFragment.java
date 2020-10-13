@@ -57,14 +57,12 @@ public class DoneFragment extends Fragment {
     private void initViews() {
         mRecyclerViewDone.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> doneTasks = mDatabase.taskDao().getStateTasks(State.DONE);
+        List<Task> doneTasks = mDatabase.getTaskDao().getStateTasks(State.DONE);
         if (doneTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
             mDoneAdapter = new TaskAdapter(doneTasks, this);
             mRecyclerViewDone.setAdapter(mDoneAdapter);
         }
-
     }
-
 }

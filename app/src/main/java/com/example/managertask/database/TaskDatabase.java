@@ -18,7 +18,8 @@ public abstract class TaskDatabase extends RoomDatabase {
 
     public synchronized static TaskDatabase getInstance(Context context) {
         if (sDatabase == null) {
-            sDatabase = Room.databaseBuilder(context.getApplicationContext(), TaskDatabase.class, TASK_DB_NAME)
+            sDatabase = Room.databaseBuilder(context.getApplicationContext(),
+                    TaskDatabase.class, TASK_DB_NAME)
                     .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .build();
@@ -26,5 +27,7 @@ public abstract class TaskDatabase extends RoomDatabase {
         return sDatabase;
     }
 
-    public abstract TaskDao taskDao();
+    public abstract TaskDao getTaskDao();
+
+    public abstract UserDao getUserDao();
 }

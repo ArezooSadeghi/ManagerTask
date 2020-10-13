@@ -60,8 +60,10 @@ public class TimePickerDialog extends DialogFragment {
                         String hour = String.valueOf(mTimePicker.getCurrentHour());
                         String minute = String.valueOf(mTimePicker.getCurrentMinute());
                         try {
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-                            Date date = simpleDateFormat.parse(String.format("%s:%s", hour, minute));
+                            SimpleDateFormat simpleDateFormat =
+                                    new SimpleDateFormat("HH:mm");
+                            Date date = simpleDateFormat
+                                    .parse(String.format("%s:%s", hour, minute));
                             Timestamp userSelectedTime = new Timestamp(date.getTime());
                             sendResult(userSelectedTime);
                         } catch (Exception e) {

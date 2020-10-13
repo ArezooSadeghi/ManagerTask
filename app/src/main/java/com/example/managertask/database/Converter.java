@@ -11,7 +11,6 @@ import java.util.Date;
 
 public class Converter {
 
-
     @TypeConverter
     public static String dateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");

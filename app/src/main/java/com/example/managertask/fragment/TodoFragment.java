@@ -56,7 +56,7 @@ public class TodoFragment extends Fragment {
     private void initViews() {
         mRecyclerViewTodo.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> tasks = mDatabase.taskDao().getAllTask();
+        List<Task> tasks = mDatabase.getTaskDao().getAllTasks();
         if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {

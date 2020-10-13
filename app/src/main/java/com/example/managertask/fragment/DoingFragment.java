@@ -1,16 +1,14 @@
 package com.example.managertask.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.example.managertask.R;
 import com.example.managertask.adapter.TaskAdapter;
@@ -59,15 +57,13 @@ public class DoingFragment extends Fragment {
     private void initViews() {
         mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> doingTasks = mDatabase.taskDao().getStateTasks(State.DOING);
+        List<Task> doingTasks = mDatabase.getTaskDao().getStateTasks(State.DOING);
         if (doingTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
             mDoingAdapter = new TaskAdapter(doingTasks, this);
             mRecyclerViewDoing.setAdapter(mDoingAdapter);
-
         }
-
     }
 }
 

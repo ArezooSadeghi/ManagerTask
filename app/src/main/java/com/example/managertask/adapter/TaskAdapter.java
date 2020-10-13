@@ -1,7 +1,5 @@
 package com.example.managertask.adapter;
 
-import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.managertask.DiffUtilCallBack;
 import com.example.managertask.R;
 import com.example.managertask.fragment.TaskInformationDialog;
 import com.example.managertask.model.Task;
@@ -28,33 +21,42 @@ import java.util.Date;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
-    public static final String TAG = "Edit";
+    private static final String TAG = "Edit";
+    private static final int REQUEST_CODE = 0;
     private List<Task> mTasks;
     private Fragment mFragment;
-    private TaskAdapter mTaskAdapter;
+    private Task mTask;
 
     public TaskAdapter(List<Task> tasks, Fragment fragment) {
         mTasks = tasks;
         mFragment = fragment;
     }
 
-    public List<Task> getTasks() {
-        return mTasks;
-    }
-
     public void setTasks(List<Task> tasks) {
         mTasks = tasks;
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(tasks, getTasks()));
-        diffResult.dispatchUpdatesTo(this);
-        getTasks().clear();
-        this.getTasks().addAll(tasks);
+    }
+
+    public List<Task> getTasks() {
+        return mTasks;
     }
 
     @NonNull
     @Override
     public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mFragment.getActivity());
-        View view = inflater.inflate(R.layout.task_row, parent, false);
+        View view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.task_row,
+                parent,
+                false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TaskInformationDialog taskInformationDialog = TaskInformationDialog
+                        .newInstance(mTask.getTaskId());
+
+                taskInformationDialog.setTargetFragment(mFragment, REQUEST_CODE);
+                taskInformationDialog.show(mFragment.getActivity()
+                        .getSupportFragmentManager(), TAG);
+            }
+        });
         return new TaskHolder(view);
     }
 
@@ -76,22 +78,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             findViews(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TaskInformationDialog taskInformationDialog = TaskInformationDialog.newInstance(mTask.getId());
-                    taskInformationDialog.show(mFragment.getActivity().getSupportFragmentManager(), TAG);
-                    taskInformationDialog.setTargetFragment(mFragment, 0);
-
-               /* Activity activity = (Activity) mContext;
-                if(activity instanceof FragmentActivity) {
-                    taskInformationDialog.show(((FragmentActivity)activity).getSupportFragmentManager(), TAG);
-                }*/
-
-                }
-            });
         }
-
 
         private void findViews(@NonNull View itemView) {
             mTextViewTitle = itemView.findViewById(R.id.txt_row_title);

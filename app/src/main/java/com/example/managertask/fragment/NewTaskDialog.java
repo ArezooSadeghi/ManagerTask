@@ -90,7 +90,7 @@ public class NewTaskDialog extends DialogFragment {
                     mTask.setState(State.DOING);
                 }
                 mDatabase = TaskDatabase.getInstance(getActivity());
-                mDatabase.taskDao().insert(mTask);
+                mDatabase.getTaskDao().insert(mTask);
                 dismiss();
             }
         });

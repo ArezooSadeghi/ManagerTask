@@ -24,7 +24,8 @@ import java.util.GregorianCalendar;
 public class DatePickerDialog extends DialogFragment {
 
     public static final String ARGS_TASK_DATE = "taskDate";
-    public static final String EXTRA_USER_SELECTED_DATE = "com.example.managertask.user selected date";
+    public static final String EXTRA_USER_SELECTED_DATE =
+            "com.example.managertask.user selected date";
     private DatePicker mDatePicker;
     private Date mTaskDate;
 
@@ -73,6 +74,7 @@ public class DatePickerDialog extends DialogFragment {
     private void findViews(View view) {
         mDatePicker = view.findViewById(R.id.datepicker);
     }
+
     public void initDatePicker() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(mTaskDate);

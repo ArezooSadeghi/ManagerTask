@@ -98,7 +98,7 @@ public class TaskInformationDialog extends DialogFragment {
                 } else {
                     mTask.setState(State.DOING);
                 }
-                mDatabase.taskDao().update(mTask);
+                mDatabase.getTaskDao().update(mTask);
                 dismiss();
             }
         });
@@ -107,7 +107,8 @@ public class TaskInformationDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(mTask.getDate());
-                datePickerDialog.setTargetFragment(TaskInformationDialog.this, DATE_PICKER_REQUEST_CODE);
+                datePickerDialog.setTargetFragment(TaskInformationDialog.this,
+                        DATE_PICKER_REQUEST_CODE);
                 datePickerDialog.show(getActivity().getSupportFragmentManager(), TAG);
             }
         });
@@ -115,7 +116,8 @@ public class TaskInformationDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(mTask.getTime());
-                timePickerDialog.setTargetFragment(TaskInformationDialog.this, TIME_PICKER_REQUEST_CODE);
+                timePickerDialog.setTargetFragment(TaskInformationDialog.this,
+                        TIME_PICKER_REQUEST_CODE);
                 timePickerDialog.show(getActivity().getSupportFragmentManager(), TAG_2);
             }
         });
@@ -123,7 +125,7 @@ public class TaskInformationDialog extends DialogFragment {
         mButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.taskDao().delete(mTask);
+                mDatabase.getTaskDao().delete(mTask);
                 dismiss();
             }
         });
@@ -142,9 +144,9 @@ public class TaskInformationDialog extends DialogFragment {
 
     public void initViews() {
         mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> tasks = mDatabase.taskDao().getAllTask();
+        List<Task> tasks = mDatabase.getTaskDao().getAllTasks();
         for (Task task : tasks) {
-            if (task.getId() == mTaskId) {
+            if (task.getTaskId() == mTaskId) {
                 mTask = task;
                 mEditTextTitle.setText(mTask.getTitle());
                 mEditTextTitle.setFocusable(false);
@@ -164,7 +166,6 @@ public class TaskInformationDialog extends DialogFragment {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
             }
-
         }
     }
 
@@ -174,13 +175,15 @@ public class TaskInformationDialog extends DialogFragment {
             return;
         }
         if (requestCode == DATE_PICKER_REQUEST_CODE) {
-            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
+            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog
+                    .EXTRA_USER_SELECTED_DATE);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             mButtonDate.setText(dateFormat.format(mUserSelectedDate));
         }
 
         if (requestCode == TIME_PICKER_REQUEST_CODE) {
-            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerDialog.EXTRA_USER_SELECTED_TIME);
+            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerDialog
+                    .EXTRA_USER_SELECTED_TIME);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(mUserSelectedTime.getTime());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
