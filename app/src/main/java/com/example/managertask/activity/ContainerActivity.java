@@ -1,5 +1,6 @@
 package com.example.managertask.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,5 +48,9 @@ public class ContainerActivity extends AppCompatActivity implements LoginPage.Lo
     public void loginClicked(User user) {
         Intent intent = TaskPagerActivity.newIntent(this, user);
         startActivity(intent);
+    }
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, ContainerActivity.class);
     }
 }
