@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.managertask.model.Task;
 import com.example.managertask.model.User;
 
 import java.util.List;
@@ -16,4 +17,8 @@ public interface UserDao {
 
     @Query("SELECT * FROM user_table")
     List<User> getAllUsers();
+
+   /* @Query("SELECT ")
+    List<Task> getAllTasksForEveryUsers();
+*/
 }

@@ -7,6 +7,7 @@ import androidx.room.Update;
 
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
+import com.example.managertask.model.UserTask;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface TaskDao {
 
     @Query("SELECT * FROM task_table WHERE state=:taskState")
     List<Task> getStateTasks(State taskState);
+
+    @Query("SELECT * FROM task_table INNER JOIN user_table ON userId = taskId")
+    List<Task> getAllUserTasks();
 
     @Insert
     void insert(Task... tasks);

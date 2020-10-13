@@ -3,6 +3,7 @@ package com.example.managertask.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ public class TaskPagerActivity extends AppCompatActivity {
         findViews();
         setListeners();
         initViews();
+        Intent intent = this.getIntent();
     }
 
     private void findViews() {

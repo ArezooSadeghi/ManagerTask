@@ -36,7 +36,7 @@ public class TaskInformationDialog extends DialogFragment {
     private EditText mEditTextTitle, mEditTextDescription;
     private Button mButtonDate, mButtonTime, mButtonSave, mButtonDelete, mButtonEdit;
     private CheckBox mCheckBoxDone;
-    private int mTaskId;
+    private long mTaskId;
     private Task mTask;
     private TaskDatabase mDatabase;
     private Date mUserSelectedDate;
@@ -45,10 +45,10 @@ public class TaskInformationDialog extends DialogFragment {
     public TaskInformationDialog() {
     }
 
-    public static TaskInformationDialog newInstance(int taskId) {
+    public static TaskInformationDialog newInstance(long taskId) {
         TaskInformationDialog fragment = new TaskInformationDialog();
         Bundle args = new Bundle();
-        args.putInt(TASK_ID, taskId);
+        args.putLong(TASK_ID, taskId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +56,7 @@ public class TaskInformationDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskId = getArguments().getInt(TASK_ID);
+        mTaskId = getArguments().getLong(TASK_ID);
     }
 
     @NonNull

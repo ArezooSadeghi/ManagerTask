@@ -13,7 +13,7 @@ public class Task {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "taskId")
-    private int mTaskId;
+    private long mTaskId;
 
     @ColumnInfo(name = "title")
     private String mTitle;
@@ -33,7 +33,7 @@ public class Task {
     public Task() {
     }
 
-    public Task(int taskId, String title, String description, Date date, Timestamp time, State state) {
+    public Task(long taskId, String title, String description, Date date, Timestamp time, State state) {
         mTaskId = taskId;
         mTitle = title;
         mDescription = description;
@@ -58,7 +58,7 @@ public class Task {
         mDescription = description;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(long taskId) {
         mTaskId = taskId;
     }
 
@@ -66,7 +66,7 @@ public class Task {
         mDate = date;
     }
 
-    public int getTaskId() {
+    public long getTaskId() {
         return mTaskId;
     }
 

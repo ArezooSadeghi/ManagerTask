@@ -1,5 +1,6 @@
 package com.example.managertask.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,7 +13,7 @@ import com.example.managertask.fragment.LoginPage;
 import com.example.managertask.fragment.SignupPage;
 
 public class ContainerActivity extends AppCompatActivity implements LoginPage.LoginCallbacks,
-        SignupPage.SignupCallbacks {
+        SignupPage.SignupCallbacks, LoginPage.LoginCallbacksTaskPager {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,5 +40,11 @@ public class ContainerActivity extends AppCompatActivity implements LoginPage.Lo
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, LoginPage.newInstance())
                 .commit();
+    }
+
+    @Override
+    public void loginClicked() {
+        Intent intent = TaskPagerActivity.newIntent(this);
+        startActivity(intent);
     }
 }

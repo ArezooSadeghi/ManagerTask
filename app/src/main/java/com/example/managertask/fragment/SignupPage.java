@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
 import com.example.managertask.database.TaskDatabase;
+import com.example.managertask.model.Task;
 import com.example.managertask.model.User;
 
 import java.util.List;

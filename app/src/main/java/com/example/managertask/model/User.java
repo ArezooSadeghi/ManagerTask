@@ -1,5 +1,6 @@
 package com.example.managertask.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,9 +8,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "user_table")
 public class User {
 
+    @NonNull
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "userId")
-    private int mUserId;
+    private long mUserId;
 
     @ColumnInfo(name = "username")
     private String mUsername;
@@ -20,13 +22,13 @@ public class User {
     public User() {
     }
 
-    public User(int userId, String username, String password) {
+    public User(long userId, String username, String password) {
         mUserId = userId;
         mUsername = username;
         mPassword = password;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         mUserId = userId;
     }
 
@@ -38,7 +40,7 @@ public class User {
         mPassword = password;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return mUserId;
     }
 
