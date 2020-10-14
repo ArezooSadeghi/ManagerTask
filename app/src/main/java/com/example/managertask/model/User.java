@@ -5,16 +5,15 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.UUID;
 
 @Entity(tableName = "user_table")
-public class User implements Serializable {
+public class User {
 
     @NonNull
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "userId")
-    private long mUserId;
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    public UUID mUserId;
 
     @ColumnInfo(name = "username")
     private String mUsername;
@@ -23,16 +22,13 @@ public class User implements Serializable {
     private String mPassword;
 
     public User() {
+        mUserId = UUID.randomUUID();
     }
 
-    public User(long userId, String username, String password) {
-        mUserId = userId;
+    public User(String username, String password) {
+        mUserId = UUID.randomUUID();
         mUsername = username;
         mPassword = password;
-    }
-
-    public void setUserId(long userId) {
-        mUserId = userId;
     }
 
     public void setUsername(String username) {
@@ -43,7 +39,8 @@ public class User implements Serializable {
         mPassword = password;
     }
 
-    public long getUserId() {
+    @NonNull
+    public UUID getUserId() {
         return mUserId;
     }
 

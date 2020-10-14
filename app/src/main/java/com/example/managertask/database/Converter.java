@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class Converter {
 
@@ -54,5 +55,15 @@ public class Converter {
     public static State stringToEnum(String state) {
         State s = State.valueOf(state);
         return s;
+    }
+
+    @TypeConverter
+    public static String uuidToString(UUID uuid) {
+        return uuid.toString();
+    }
+
+    @TypeConverter
+    public static UUID stringToUuid(String uuid) {
+        return UUID.fromString(uuid);
     }
 }

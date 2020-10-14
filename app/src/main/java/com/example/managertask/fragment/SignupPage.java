@@ -2,7 +2,6 @@ package com.example.managertask.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
-import com.example.managertask.database.TaskDatabase;
-import com.example.managertask.model.Task;
+import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.User;
 
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.List;
 public class SignupPage extends Fragment {
     private Button mButtonSignup, mButtonBack;
     private EditText mEditTextUsername, mEditTextPassword;
-    private TaskDatabase mDatabase;
+    private DemoDatabase mDatabase;
     private SignupCallbacks mCallbacks;
     private User mUser;
 
@@ -52,8 +50,8 @@ public class SignupPage extends Fragment {
         mButtonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase = TaskDatabase.getInstance(getActivity());
-                List<User> users = mDatabase.getUserDao().getAllUsers();
+                mDatabase = DemoDatabase.getInstance(getActivity());
+                List<User> users = mDatabase.getDemoDao().getAllUsers();
                 if (mEditTextUsername.getText().toString().equals("") || mEditTextPassword.getText()
                         .toString().equals("")) {
                     Toast.makeText(getActivity(), "please enter username and password",
@@ -93,7 +91,7 @@ public class SignupPage extends Fragment {
         User newUser = new User();
         newUser.setUsername(mEditTextUsername.getText().toString());
         newUser.setPassword(mEditTextPassword.getText().toString());
-        mDatabase.getUserDao().insert(newUser);
+        mDatabase.getDemoDao().insertUser(newUser);
         Toast.makeText(getActivity(), "Your registration was successful",
                 Toast.LENGTH_SHORT).show();
     }

@@ -2,7 +2,6 @@ package com.example.managertask.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
-import com.example.managertask.database.TaskDatabase;
+import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.User;
 
 import java.util.List;
+import java.util.UUID;
 
 public class LoginPage extends Fragment {
     private Button mButtonSignup, mButtonLogin;
     private EditText mEditTextUsename, mEditTextPassword;
-    private TaskDatabase mDatabase;
+    private DemoDatabase mDatabase;
     private LoginCallbacks mCallbacks;
     private LoginCallbacksTaskPager mCallbacksTaskPager;
 
@@ -58,14 +58,14 @@ public class LoginPage extends Fragment {
                 mCallbacks.signupClicked();
             }
         });
-        
+
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase = TaskDatabase.getInstance(getActivity());
-                List<User> users = mDatabase.getUserDao().getAllUsers();
+                mDatabase = DemoDatabase.getInstance(getActivity());
+                List<User> users = mDatabase.getDemoDao().getAllUsers();
                 if (mEditTextUsename.getText().toString().equals("")
-                || mEditTextPassword.getText().toString().equals("")) {
+                        || mEditTextPassword.getText().toString().equals("")) {
                     Toast.makeText(getActivity(), "please enter username and password",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -75,11 +75,11 @@ public class LoginPage extends Fragment {
                 }
 
                 boolean flag = true;
-                for (User user:users) {
+                for (User user : users) {
                     if (user.getUsername().equals(mEditTextUsename.getText().toString())
-                    && (user.getPassword().equals(mEditTextPassword.getText().toString()))) {
+                            && (user.getPassword().equals(mEditTextPassword.getText().toString()))) {
                         flag = false;
-                        mCallbacksTaskPager.loginClicked(user);
+                        mCallbacksTaskPager.loginClicked(user.getUserId());
                         break;
                     }
                 }
@@ -98,13 +98,13 @@ public class LoginPage extends Fragment {
         mEditTextUsename = view.findViewById(R.id.txt_username);
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
-    
+
     public interface LoginCallbacks {
         void signupClicked();
     }
-    
+
     public interface LoginCallbacksTaskPager {
-        void loginClicked(User user);
+        void loginClicked(UUID userId);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class LoginPage extends Fragment {
         if (context instanceof LoginCallbacks) {
             mCallbacks = (LoginCallbacks) context;
         }
-        
+
         if (context instanceof LoginCallbacksTaskPager) {
             mCallbacksTaskPager = (LoginCallbacksTaskPager) context;
         }

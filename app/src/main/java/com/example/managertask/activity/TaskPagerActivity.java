@@ -1,10 +1,8 @@
 package com.example.managertask.activity;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,22 +16,23 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.managertask.R;
-import com.example.managertask.fragment.NewTaskDialog;
 import com.example.managertask.fragment.DoingFragment;
 import com.example.managertask.fragment.DoneFragment;
+import com.example.managertask.fragment.NewTaskDialog;
 import com.example.managertask.fragment.TodoFragment;
-import com.example.managertask.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.UUID;
+
 public class TaskPagerActivity extends AppCompatActivity {
-    private static final String EXTRA_USER = "com.example.managertask.user";
+    private static final String EXTRA_USER_ID = "com.example.managertask.userId";
     private static final String TAG = "TPA";
     private ViewPager2 mViewPager;
     private TabLayout mTabLayout;
     private FloatingActionButton mFabAdd;
-    private User mUser;
+    private UUID mUserId;
 
 
     @Override
@@ -44,7 +43,7 @@ public class TaskPagerActivity extends AppCompatActivity {
         setListeners();
         initViews();
         Intent intent = this.getIntent();
-        mUser = (User) intent.getSerializableExtra(EXTRA_USER);
+        mUserId = (UUID) intent.getSerializableExtra(EXTRA_USER_ID);
     }
 
     private void findViews() {
@@ -58,7 +57,7 @@ public class TaskPagerActivity extends AppCompatActivity {
         mFabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewTaskDialog dialogAddNewTaskFragment = NewTaskDialog.newInstance();
+                NewTaskDialog dialogAddNewTaskFragment = NewTaskDialog.newInstance(mUserId);
                 dialogAddNewTaskFragment.show(getSupportFragmentManager(), TAG);
             }
         });
@@ -100,11 +99,11 @@ public class TaskPagerActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return DoneFragment.newInstance(mUser);
+                    return DoneFragment.newInstance(mUserId);
                 case 1:
-                    return DoingFragment.newInstance(mUser);
+                    return DoingFragment.newInstance(mUserId);
                 default:
-                    return TodoFragment.newInstance(mUser);
+                    return TodoFragment.newInstance(mUserId);
             }
         }
 
@@ -114,9 +113,9 @@ public class TaskPagerActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent newIntent(Context context, User user) {
+    public static Intent newIntent(Context context, UUID userId) {
         Intent intent = new Intent(context, TaskPagerActivity.class);
-        intent.putExtra(EXTRA_USER, user);
+        intent.putExtra(EXTRA_USER_ID, userId);
         return intent;
     }
 

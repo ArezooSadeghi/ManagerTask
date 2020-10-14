@@ -2,6 +2,7 @@ package com.example.managertask.database;
 
 import android.content.Context;
 
+import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
@@ -9,17 +10,18 @@ import androidx.room.TypeConverters;
 import com.example.managertask.model.Task;
 import com.example.managertask.model.User;
 
-@androidx.room.Database(entities = {Task.class, User.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, Task.class}, version = 1, exportSchema = false)
 @TypeConverters({Converter.class})
-public abstract class TaskDatabase extends RoomDatabase {
-    private static TaskDatabase sDatabase;
+public abstract class DemoDatabase extends RoomDatabase {
 
-    public final static String TASK_DB_NAME = "task.db";
+    private static DemoDatabase sDatabase;
 
-    public synchronized static TaskDatabase getInstance(Context context) {
+    public final static String DB_NAME = "demo.db";
+
+    public synchronized static DemoDatabase getInstance(Context context) {
         if (sDatabase == null) {
             sDatabase = Room.databaseBuilder(context.getApplicationContext(),
-                    TaskDatabase.class, TASK_DB_NAME)
+                    DemoDatabase.class, DB_NAME)
                     .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .build();
@@ -27,7 +29,6 @@ public abstract class TaskDatabase extends RoomDatabase {
         return sDatabase;
     }
 
-    public abstract TaskDao getTaskDao();
-
-    public abstract UserDao getUserDao();
+    public abstract DemoDao getDemoDao();
 }
+

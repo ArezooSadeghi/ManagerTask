@@ -12,27 +12,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.managertask.R;
 import com.example.managertask.adapter.TaskAdapter;
-import com.example.managertask.database.TaskDatabase;
+import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.Task;
-import com.example.managertask.model.User;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TodoFragment extends Fragment {
-    private static final String ARGS_USER = "user";
+    private static final String ARGS_USER_ID = "userId";
     private RecyclerView mRecyclerViewTodo;
-    private TaskDatabase mDatabase;
+    private DemoDatabase mDatabase;
     private LinearLayout mLayoutEmptyRecyclerview;
     private TaskAdapter mTodoAdapter;
-    private User mUser;
+    private UUID mUserId;
 
     public TodoFragment() {
     }
 
-    public static TodoFragment newInstance(User user) {
+    public static TodoFragment newInstance(UUID userId) {
         TodoFragment fragment = new TodoFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARGS_USER, user);
+        args.putSerializable(ARGS_USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,7 +40,7 @@ public class TodoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUser = (User) getArguments().getSerializable(ARGS_USER);
+        mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
     }
 
     @Override
@@ -60,9 +60,8 @@ public class TodoFragment extends Fragment {
 
     private void initViews() {
         mRecyclerViewTodo.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mDatabase = TaskDatabase.getInstance(getActivity());
-        long userId = mDatabase.getUserDao().getUserId(mUser.getUsername(), mUser.getPassword());
-        List<Task> tasks = mDatabase.getTaskDao().getAllTasksForEveryUser(userId);
+        mDatabase = DemoDatabase.getInstance(getActivity());
+        List<Task> tasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
         if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {

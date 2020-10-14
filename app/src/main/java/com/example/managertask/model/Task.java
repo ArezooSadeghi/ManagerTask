@@ -1,19 +1,21 @@
 package com.example.managertask.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
-@Entity(tableName = "task_table", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "userId", childColumns = "taskId"))
+@Entity(tableName = "task_table")
 public class Task {
 
+    @NonNull
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "taskId")
-    private long mTaskId;
+    @ColumnInfo(name = "id")
+    private int mTaskId;
 
     @ColumnInfo(name = "title")
     private String mTitle;
@@ -30,20 +32,36 @@ public class Task {
     @ColumnInfo(name = "state")
     private State mState;
 
+    @ColumnInfo(name = "usertaskid")
+    private UUID mUserTaskId;
+
     public Task() {
     }
 
-    public Task(long taskId, String title, String description, Date date, Timestamp time, State state) {
-        mTaskId = taskId;
+    public Task(String title, String description, Date date, Timestamp time, State state,
+                UUID userTaskId) {
         mTitle = title;
         mDescription = description;
         mDate = date;
         mTime = time;
         mState = state;
+        mUserTaskId = userTaskId;
+    }
+
+    public void setTaskId(int taskId) {
+        mTaskId = taskId;
     }
 
     public void setTitle(String title) {
         mTitle = title;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
     }
 
     public void setTime(Timestamp time) {
@@ -54,32 +72,16 @@ public class Task {
         mState = state;
     }
 
-    public void setDescription(String description) {
-        mDescription = description;
+    public void setUserTaskId(UUID userTaskId) {
+        mUserTaskId = userTaskId;
     }
 
-    public void setTaskId(long taskId) {
-        mTaskId = taskId;
-    }
-
-    public void setDate(Date date) {
-        mDate = date;
-    }
-
-    public long getTaskId() {
+    public int getTaskId() {
         return mTaskId;
-    }
-
-    public Timestamp getTime() {
-        return mTime;
     }
 
     public String getTitle() {
         return mTitle;
-    }
-
-    public State getState() {
-        return mState;
     }
 
     public String getDescription() {
@@ -88,5 +90,17 @@ public class Task {
 
     public Date getDate() {
         return mDate;
+    }
+
+    public Timestamp getTime() {
+        return mTime;
+    }
+
+    public State getState() {
+        return mState;
+    }
+
+    public UUID getUserTaskId() {
+        return mUserTaskId;
     }
 }

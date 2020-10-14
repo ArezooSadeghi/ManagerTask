@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.managertask.R;
-import com.example.managertask.database.TaskDatabase;
+import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 
@@ -25,13 +25,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 public class NewTaskDialog extends DialogFragment {
+    private static final String ARGS_USER_ID = "userId";
     private Button mButtonSave, mButtonDate, mButtonTime;
     private EditText mEditTextTitle, mEditTextDescription;
     private CheckBox mCheckBoxDone;
-    private TaskDatabase mDatabase;
+    private DemoDatabase mDatabase;
     private Task mTask;
+    private UUID mUserId;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
     public static final String TAG1 = "DANTF";
@@ -42,9 +45,10 @@ public class NewTaskDialog extends DialogFragment {
     public NewTaskDialog() {
     }
 
-    public static NewTaskDialog newInstance() {
+    public static NewTaskDialog newInstance(UUID userId) {
         NewTaskDialog fragment = new NewTaskDialog();
         Bundle args = new Bundle();
+        args.putSerializable(ARGS_USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,6 +56,7 @@ public class NewTaskDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
     }
 
     @NonNull
@@ -80,6 +85,7 @@ public class NewTaskDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mTask = new Task();
+                mTask.setUserTaskId(mUserId);
                 mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
                 mTask.setDate(mUserSelectedDate);
@@ -89,8 +95,8 @@ public class NewTaskDialog extends DialogFragment {
                 } else {
                     mTask.setState(State.DOING);
                 }
-                mDatabase = TaskDatabase.getInstance(getActivity());
-                mDatabase.getTaskDao().insert(mTask);
+                mDatabase = DemoDatabase.getInstance(getActivity());
+                mDatabase.getDemoDao().insertTask(mTask);
                 dismiss();
             }
         });

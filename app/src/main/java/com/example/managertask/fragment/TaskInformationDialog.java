@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.managertask.R;
-import com.example.managertask.database.TaskDatabase;
+import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 
@@ -36,9 +36,9 @@ public class TaskInformationDialog extends DialogFragment {
     private EditText mEditTextTitle, mEditTextDescription;
     private Button mButtonDate, mButtonTime, mButtonSave, mButtonDelete, mButtonEdit;
     private CheckBox mCheckBoxDone;
-    private long mTaskId;
+    private int mTaskId;
     private Task mTask;
-    private TaskDatabase mDatabase;
+    private DemoDatabase mDatabase;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
 
@@ -56,7 +56,7 @@ public class TaskInformationDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskId = getArguments().getLong(TASK_ID);
+        mTaskId = getArguments().getInt(TASK_ID);
     }
 
     @NonNull
@@ -98,7 +98,7 @@ public class TaskInformationDialog extends DialogFragment {
                 } else {
                     mTask.setState(State.DOING);
                 }
-                mDatabase.getTaskDao().update(mTask);
+                mDatabase.getDemoDao().updateTask(mTask);
                 dismiss();
             }
         });
@@ -125,7 +125,7 @@ public class TaskInformationDialog extends DialogFragment {
         mButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.getTaskDao().delete(mTask);
+                mDatabase.getDemoDao().deleteTask(mTask);
                 dismiss();
             }
         });
@@ -143,8 +143,8 @@ public class TaskInformationDialog extends DialogFragment {
     }
 
     public void initViews() {
-        mDatabase = TaskDatabase.getInstance(getActivity());
-        List<Task> tasks = mDatabase.getTaskDao().getAllTasks();
+        mDatabase = DemoDatabase.getInstance(getActivity());
+        List<Task> tasks = mDatabase.getDemoDao().getAllTasks();
         for (Task task : tasks) {
             if (task.getTaskId() == mTaskId) {
                 mTask = task;
