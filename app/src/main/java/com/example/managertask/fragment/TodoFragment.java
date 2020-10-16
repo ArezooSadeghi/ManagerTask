@@ -15,6 +15,7 @@ import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,12 +62,22 @@ public class TodoFragment extends Fragment {
     private void initViews() {
         mRecyclerViewTodo.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
+    }
+
+    public void updateRecyclerview() {
         List<Task> tasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
         if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            mTodoAdapter = new TaskAdapter(tasks, this);
-            mRecyclerViewTodo.setAdapter(mTodoAdapter);
+            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
+            if (mTodoAdapter == null) {
+                mTodoAdapter = new TaskAdapter(tasks, this);
+                mRecyclerViewTodo.setAdapter(mTodoAdapter);
+            } else {
+                mTodoAdapter.setTasks(tasks);
+                mRecyclerViewTodo.setAdapter(mTodoAdapter);
+                mTodoAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

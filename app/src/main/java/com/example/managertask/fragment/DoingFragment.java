@@ -15,6 +15,7 @@ import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,12 +62,23 @@ public class DoingFragment extends Fragment {
     private void initViews() {
         mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
+        updateRecyclerview();
+    }
+
+    public void updateRecyclerview() {
         List<Task> tasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
         if (tasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
-            mDoingAdapter = new TaskAdapter(tasks, this);
-            mRecyclerViewDoing.setAdapter(mDoingAdapter);
+            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
+            if (mDoingAdapter == null) {
+                mDoingAdapter = new TaskAdapter(tasks, this);
+                mRecyclerViewDoing.setAdapter(mDoingAdapter);
+            } else {
+                mDoingAdapter.setTasks(tasks);
+                mRecyclerViewDoing.setAdapter(mDoingAdapter);
+                mDoingAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

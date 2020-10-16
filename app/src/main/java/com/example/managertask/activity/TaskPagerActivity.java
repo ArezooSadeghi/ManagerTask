@@ -26,14 +26,17 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.UUID;
 
-public class TaskPagerActivity extends AppCompatActivity {
+public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialog.Callbacks {
     private static final String EXTRA_USER_ID = "com.example.managertask.userId";
     private static final String TAG = "TPA";
     private ViewPager2 mViewPager;
     private TabLayout mTabLayout;
     private FloatingActionButton mFabAdd;
     private UUID mUserId;
-
+    private TaskPagerAdapter mAdapter;
+    private DoneFragment mDoneFragment;
+    private DoingFragment mDoingFragment;
+    private TodoFragment mTodoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,8 @@ public class TaskPagerActivity extends AppCompatActivity {
 
 
     private void initViews() {
-        mViewPager.setAdapter(new TaskPagerAdapter(this));
+        mAdapter = new TaskPagerAdapter(this);
+        mViewPager.setAdapter(mAdapter);
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(mTabLayout, mViewPager,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override
@@ -86,6 +90,13 @@ public class TaskPagerActivity extends AppCompatActivity {
         tabLayoutMediator.attach();
     }
 
+    @Override
+    public void saveClicked() {
+        mDoneFragment.updateRecyclerview();
+        mDoingFragment.updateRecyclerview();
+        mTodoFragment.updateRecyclerview();
+    }
+
     private class TaskPagerAdapter extends FragmentStateAdapter {
 
         private final static int NUMBER_OF_PAGES = 3;
@@ -99,11 +110,14 @@ public class TaskPagerActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return DoneFragment.newInstance(mUserId);
+                    mDoneFragment = DoneFragment.newInstance(mUserId);
+                    return mDoneFragment;
                 case 1:
-                    return DoingFragment.newInstance(mUserId);
+                    mDoingFragment = DoingFragment.newInstance(mUserId);
+                    return mDoingFragment;
                 default:
-                    return TodoFragment.newInstance(mUserId);
+                    mTodoFragment = TodoFragment.newInstance(mUserId);
+                    return mTodoFragment;
             }
         }
 

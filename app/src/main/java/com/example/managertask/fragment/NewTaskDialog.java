@@ -3,8 +3,10 @@ package com.example.managertask.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +37,7 @@ public class NewTaskDialog extends DialogFragment {
     private DemoDatabase mDatabase;
     private Task mTask;
     private UUID mUserId;
+    private Callbacks mCallbacks;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
     public static final String TAG1 = "DANTF";
@@ -97,6 +100,7 @@ public class NewTaskDialog extends DialogFragment {
                 }
                 mDatabase = DemoDatabase.getInstance(getActivity());
                 mDatabase.getDemoDao().insertTask(mTask);
+                mCallbacks.saveClicked();
                 dismiss();
             }
         });
@@ -146,6 +150,18 @@ public class NewTaskDialog extends DialogFragment {
             calendar.setTimeInMillis(mUserSelectedTime.getTime());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+        }
+    }
+
+    public interface Callbacks {
+        void saveClicked();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof NewTaskDialog.Callbacks) {
+            mCallbacks = (NewTaskDialog.Callbacks) context;
         }
     }
 }
