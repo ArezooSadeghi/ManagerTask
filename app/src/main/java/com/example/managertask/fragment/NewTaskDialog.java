@@ -100,7 +100,7 @@ public class NewTaskDialog extends DialogFragment {
                 }
                 mDatabase = DemoDatabase.getInstance(getActivity());
                 mDatabase.getDemoDao().insertTask(mTask);
-                mCallbacks.saveClicked();
+                mCallbacks.okClicked();
                 dismiss();
             }
         });
@@ -154,7 +154,7 @@ public class NewTaskDialog extends DialogFragment {
     }
 
     public interface Callbacks {
-        void saveClicked();
+        void okClicked();
     }
 
     @Override

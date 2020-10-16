@@ -13,9 +13,9 @@ import java.util.UUID;
 public class Task {
 
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "id")
-    private int mTaskId;
+    private UUID mTaskId;
 
     @ColumnInfo(name = "title")
     private String mTitle;
@@ -36,6 +36,7 @@ public class Task {
     private UUID mUserTaskId;
 
     public Task() {
+        mTaskId = UUID.randomUUID();
     }
 
     public Task(String title, String description, Date date, Timestamp time, State state,
@@ -46,9 +47,10 @@ public class Task {
         mTime = time;
         mState = state;
         mUserTaskId = userTaskId;
+        mTaskId = UUID.randomUUID();
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(UUID taskId) {
         mTaskId = taskId;
     }
 
@@ -76,7 +78,7 @@ public class Task {
         mUserTaskId = userTaskId;
     }
 
-    public int getTaskId() {
+    public UUID getTaskId() {
         return mTaskId;
     }
 

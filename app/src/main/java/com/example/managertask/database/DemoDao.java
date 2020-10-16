@@ -3,6 +3,7 @@ package com.example.managertask.database;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -31,7 +32,7 @@ public interface DemoDao {
     @Update
     void updateUser(User user);
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTask(Task task);
 
     @Query("SELECT * FROM task_table")

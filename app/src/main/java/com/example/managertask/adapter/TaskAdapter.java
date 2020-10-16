@@ -46,17 +46,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
         View view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.task_row,
                 parent,
                 false);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TaskInformationDialog taskInformationDialog = TaskInformationDialog
-                        .newInstance(mTask.getTaskId());
-
-                taskInformationDialog.setTargetFragment(mFragment, REQUEST_CODE);
-                taskInformationDialog.show(mFragment.getActivity()
-                        .getSupportFragmentManager(), TAG);
-            }
-        });
         return new TaskHolder(view);
     }
 
@@ -75,9 +64,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
         private Button mButtonFirstLetter;
         private Task mTask;
 
-        public TaskHolder(@NonNull View itemView) {
+        public TaskHolder(@NonNull final View itemView) {
             super(itemView);
             findViews(itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TaskInformationDialog taskInformationDialog = TaskInformationDialog
+                            .newInstance(mTask.getTaskId());
+
+                    taskInformationDialog.setTargetFragment(mFragment, REQUEST_CODE);
+                    taskInformationDialog.show(mFragment.getActivity()
+                            .getSupportFragmentManager(), TAG);
+                }
+            });
         }
 
         private void findViews(@NonNull View itemView) {

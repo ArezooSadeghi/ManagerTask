@@ -3,6 +3,7 @@ package com.example.managertask.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskInformationDialog extends DialogFragment {
     public static final String TASK_ID = "taskId";
@@ -33,22 +35,25 @@ public class TaskInformationDialog extends DialogFragment {
     public static final String TAG_2 = "Tag2";
     public static final int DATE_PICKER_REQUEST_CODE = 0;
     public static final int TIME_PICKER_REQUEST_CODE = 1;
+    public static final String ARGS_POSITION = "position";
     private EditText mEditTextTitle, mEditTextDescription;
     private Button mButtonDate, mButtonTime, mButtonSave, mButtonDelete, mButtonEdit;
     private CheckBox mCheckBoxDone;
-    private int mTaskId;
+    private UUID mTaskId;
     private Task mTask;
     private DemoDatabase mDatabase;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
+    private TaskInformationCallbacks mCallbacks;
+    private TaskInformationCallbacks1 mCallbacks1;
 
     public TaskInformationDialog() {
     }
 
-    public static TaskInformationDialog newInstance(long taskId) {
+    public static TaskInformationDialog newInstance(UUID taskId) {
         TaskInformationDialog fragment = new TaskInformationDialog();
         Bundle args = new Bundle();
-        args.putLong(TASK_ID, taskId);
+        args.putSerializable(TASK_ID, taskId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +61,7 @@ public class TaskInformationDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskId = getArguments().getInt(TASK_ID);
+        mTaskId = (UUID) getArguments().getSerializable(TASK_ID);
     }
 
     @NonNull
@@ -99,6 +104,7 @@ public class TaskInformationDialog extends DialogFragment {
                     mTask.setState(State.DOING);
                 }
                 mDatabase.getDemoDao().updateTask(mTask);
+                mCallbacks.saveClicked();
                 dismiss();
             }
         });
@@ -126,6 +132,7 @@ public class TaskInformationDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mDatabase.getDemoDao().deleteTask(mTask);
+                mCallbacks1.deleteClicked();
                 dismiss();
             }
         });
@@ -146,7 +153,7 @@ public class TaskInformationDialog extends DialogFragment {
         mDatabase = DemoDatabase.getInstance(getActivity());
         List<Task> tasks = mDatabase.getDemoDao().getAllTasks();
         for (Task task : tasks) {
-            if (task.getTaskId() == mTaskId) {
+            if (mTaskId.equals(task.getTaskId())) {
                 mTask = task;
                 mEditTextTitle.setText(mTask.getTitle());
                 mEditTextTitle.setFocusable(false);
@@ -188,6 +195,26 @@ public class TaskInformationDialog extends DialogFragment {
             calendar.setTimeInMillis(mUserSelectedTime.getTime());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+        }
+    }
+
+    public interface TaskInformationCallbacks {
+        void saveClicked();
+    }
+
+    public interface TaskInformationCallbacks1 {
+        void deleteClicked();
+
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof TaskInformationCallbacks) {
+            mCallbacks = (TaskInformationCallbacks) context;
+        }
+        if (context instanceof TaskInformationCallbacks1) {
+            mCallbacks1 = (TaskInformationCallbacks1) context;
         }
     }
 }

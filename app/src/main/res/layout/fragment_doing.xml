@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragment.DoingFragment">
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/doing_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:id="@+id/layout_empty_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="90dp"
-            android:src="@drawable/notebook" />
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/emoji" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:text="@string/empty_recyclerview"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
-</FrameLayout>
+
+
+</LinearLayout>
