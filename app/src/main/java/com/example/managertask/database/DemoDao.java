@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 import com.example.managertask.model.User;
 
@@ -41,4 +42,7 @@ public interface DemoDao {
 
     @Query("SELECT * FROM task_table WHERE usertaskid=:userId")
     List<Task> getAllTasksForEveryUser(UUID userId);
+
+    @Query("SELECT * FROM task_table WHERE usertaskid=:taskId AND state=:taskState")
+    List<Task> getAllTaksByState(State taskState, UUID taskId);
 }

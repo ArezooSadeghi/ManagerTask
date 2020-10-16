@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.managertask.R;
 import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.DemoDatabase;
+import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 
 import java.util.ArrayList;
@@ -66,16 +67,16 @@ public class DoingFragment extends Fragment {
     }
 
     public void updateRecyclerview() {
-        List<Task> tasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
-        if (tasks.size() == 0) {
+        List<Task> doingTasks = mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId);
+        if (doingTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
         } else {
             mLayoutEmptyRecyclerview.setVisibility(View.GONE);
             if (mDoingAdapter == null) {
-                mDoingAdapter = new TaskAdapter(tasks, this);
+                mDoingAdapter = new TaskAdapter(doingTasks, this);
                 mRecyclerViewDoing.setAdapter(mDoingAdapter);
             } else {
-                mDoingAdapter.setTasks(tasks);
+                mDoingAdapter.setTasks(doingTasks);
                 mRecyclerViewDoing.setAdapter(mDoingAdapter);
                 mDoingAdapter.notifyDataSetChanged();
             }
