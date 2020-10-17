@@ -21,20 +21,20 @@ import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class DoingFragment extends Fragment {
     private static final String ARGS_USER_ID = "userId";
+    private LinearLayout mLayoutEmptyRecyclerview;
     private RecyclerView mRecyclerViewDoing;
     private DemoDatabase mDatabase;
-    private LinearLayout mLayoutEmptyRecyclerview;
     private TaskAdapter mDoingAdapter;
     private UUID mUserId;
 
     public DoingFragment() {
     }
+
 
     public static DoingFragment newInstance(UUID userId) {
         DoingFragment fragment = new DoingFragment();
@@ -44,11 +44,14 @@ public class DoingFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,37 +60,28 @@ public class DoingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_doing, container, false);
         findViews(view);
         initViews();
-        setHasOptionsMenu(true);
         return view;
     }
+
 
     private void findViews(View view) {
         mRecyclerViewDoing = view.findViewById(R.id.doing_recyclerview);
         mLayoutEmptyRecyclerview = view.findViewById(R.id.layout_empty_recyclerview);
     }
 
+
     private void initViews() {
         mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
-        updateRecyclerview();
-    }
-
-    public void updateRecyclerview() {
         List<Task> doingTasks = mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId);
-        if (doingTasks.size() == 0) {
-            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        if (mDoingAdapter == null) {
+            mDoingAdapter = new TaskAdapter(doingTasks, this);
+            mRecyclerViewDoing.setAdapter(mDoingAdapter);
         } else {
-            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
-            if (mDoingAdapter == null) {
-                mDoingAdapter = new TaskAdapter(doingTasks, this);
-                mRecyclerViewDoing.setAdapter(mDoingAdapter);
-            } else {
-                mDoingAdapter.setTasks(doingTasks);
-                mRecyclerViewDoing.setAdapter(mDoingAdapter);
-                mDoingAdapter.notifyDataSetChanged();
-            }
+            updateRecyclerview();
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -97,18 +91,24 @@ public class DoingFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mDoingAdapter.getFilter().filter(newText);
+                if (mDoingAdapter != null) {
+                    mDoingAdapter.getFilter().filter(newText);
+                }
                 return true;
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+
+    public void updateRecyclerview() {
+        mDoingAdapter.updateTasks(mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId));
     }
+}
 
 

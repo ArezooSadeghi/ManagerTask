@@ -29,11 +29,12 @@ public class Converter {
         return date;
     }
 
+
     @TypeConverter
     public static Timestamp stringToTimestamp(String time) {
         Timestamp timestamp = new Timestamp(new Date().getTime());
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
             Date parsedDate = dateFormat.parse(time);
             timestamp = new java.sql.Timestamp(parsedDate.getTime());
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public class Converter {
 
     @TypeConverter
     public static String timestampToString(Timestamp timestamp) {
-        return new SimpleDateFormat("hh:mm:ss").format(timestamp);
+        return new SimpleDateFormat("hh:mm").format(timestamp);
     }
 
     @TypeConverter

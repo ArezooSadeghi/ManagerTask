@@ -95,9 +95,15 @@ public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialo
 
     @Override
     public void okClicked() {
-        mDoneFragment.updateRecyclerview();
-        mDoingFragment.updateRecyclerview();
-        mTodoFragment.updateRecyclerview();
+        if (mDoneFragment != null) {
+            mDoneFragment.updateRecyclerview();
+        }
+        if (mDoingFragment != null) {
+            mDoingFragment.updateRecyclerview();
+        }
+        if (mTodoFragment != null) {
+            mTodoFragment.updateRecyclerview();
+        }
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.example.managertask.R;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
+import com.example.managertask.utils.DateUtils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -67,16 +68,54 @@ public class TaskInformationDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.fragment_task_information_dialog, null);
+        View view = LayoutInflater.from(getActivity())
+                .inflate(R.layout.fragment_task_information_dialog, null);
+
         findViews(view);
         initViews();
         setListeners();
-
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .create();
         return dialog;
+    }
+
+
+    private void findViews(View view) {
+        mEditTextTitle = view.findViewById(R.id.title_task_information);
+        mEditTextDescription = view.findViewById(R.id.description_task_information);
+        mButtonDate = view.findViewById(R.id.date_task_information);
+        mButtonTime = view.findViewById(R.id.time_task_information);
+        mButtonSave = view.findViewById(R.id.save_task_information);
+        mButtonDelete = view.findViewById(R.id.delete_task_information);
+        mButtonEdit = view.findViewById(R.id.edit_task_information);
+        mCheckBoxDone = view.findViewById(R.id.state_task_information);
+    }
+
+
+    public void initViews() {
+        mDatabase = DemoDatabase.getInstance(getActivity());
+        List<Task> tasks = mDatabase.getDemoDao().getAllTasks();
+        for (Task task : tasks) {
+            if (mTaskId.equals(task.getTaskId())) {
+                mTask = task;
+                mEditTextTitle.setText(mTask.getTitle());
+                mEditTextTitle.setFocusable(false);
+                mEditTextDescription.setText(mTask.getDescription());
+                mEditTextDescription.setFocusable(false);
+                mButtonDate.setEnabled(false);
+                mButtonTime.setEnabled(false);
+                if (mTask.getState().equals(State.DONE)) {
+                    mCheckBoxDone.setChecked(true);
+                    mCheckBoxDone.setEnabled(false);
+                }
+                mButtonDate.setText(DateUtils.dateFormating(mTask.getDate()));
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(mTask.getTime().getTime());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+            }
+        }
     }
 
     private void setListeners() {
@@ -138,43 +177,9 @@ public class TaskInformationDialog extends DialogFragment {
         });
     }
 
-    private void findViews(View view) {
-        mEditTextTitle = view.findViewById(R.id.title_task_information);
-        mEditTextDescription = view.findViewById(R.id.description_task_information);
-        mButtonDate = view.findViewById(R.id.date_task_information);
-        mButtonTime = view.findViewById(R.id.time_task_information);
-        mButtonSave = view.findViewById(R.id.save_task_information);
-        mButtonDelete = view.findViewById(R.id.delete_task_information);
-        mButtonEdit = view.findViewById(R.id.edit_task_information);
-        mCheckBoxDone = view.findViewById(R.id.state_task_information);
-    }
 
-    public void initViews() {
-        mDatabase = DemoDatabase.getInstance(getActivity());
-        List<Task> tasks = mDatabase.getDemoDao().getAllTasks();
-        for (Task task : tasks) {
-            if (mTaskId.equals(task.getTaskId())) {
-                mTask = task;
-                mEditTextTitle.setText(mTask.getTitle());
-                mEditTextTitle.setFocusable(false);
-                mEditTextDescription.setText(mTask.getDescription());
-                mEditTextDescription.setFocusable(false);
-                mButtonDate.setEnabled(false);
-                mButtonTime.setEnabled(false);
-                if (mTask.getState().equals(State.DONE)) {
-                    mCheckBoxDone.setChecked(true);
-                    mCheckBoxDone.setEnabled(false);
-                }
 
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                mButtonDate.setText(dateFormat.format(mTask.getDate()));
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(mTask.getTime().getTime());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-                mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
-            }
-        }
-    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

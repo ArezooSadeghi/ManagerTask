@@ -21,6 +21,7 @@ import com.example.managertask.R;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
+import com.example.managertask.utils.DateUtils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -65,11 +66,12 @@ public class NewTaskDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.fragment_dialog_add_new_task, null);
+        View view = LayoutInflater.from(getActivity())
+                .inflate(R.layout.fragment_dialog_add_new_task, null);
+
         findViews(view);
-        setListeners();
         initViews();
+        setListeners();
         AlertDialog dialog = new AlertDialog.Builder(getActivity()).setView(view).create();
         return dialog;
     }
@@ -125,9 +127,7 @@ public class NewTaskDialog extends DialogFragment {
     }
 
     private void initViews() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = new Date();
-        mButtonDate.setText(dateFormat.format(date));
+        mButtonDate.setText(DateUtils.dateFormating(new Date()));
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
@@ -140,8 +140,7 @@ public class NewTaskDialog extends DialogFragment {
         }
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
             mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            mButtonDate.setText(dateFormat.format(mUserSelectedDate));
+            mButtonDate.setText(DateUtils.dateFormating(mUserSelectedDate));
         }
 
         if (requestCode == REQUEST_CODE_TIME_PICKER) {

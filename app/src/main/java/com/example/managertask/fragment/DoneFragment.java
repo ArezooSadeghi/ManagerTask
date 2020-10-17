@@ -1,7 +1,6 @@
 package com.example.managertask.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,14 +26,15 @@ import java.util.UUID;
 
 public class DoneFragment extends Fragment {
     private static final String ARGS_USER_ID = "userId";
+    private LinearLayout mLayoutEmptyRecyclerview;
     private RecyclerView mRecyclerViewDone;
     private DemoDatabase mDatabase;
-    private LinearLayout mLayoutEmptyRecyclerview;
     private TaskAdapter mDoneAdapter;
     private UUID mUserId;
 
     public DoneFragment() {
     }
+
 
     public static DoneFragment newInstance(UUID userId) {
         DoneFragment fragment = new DoneFragment();
@@ -44,12 +44,14 @@ public class DoneFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
         setHasOptionsMenu(true);
+        mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,33 +63,25 @@ public class DoneFragment extends Fragment {
         return view;
     }
 
+
     private void findViews(View view) {
         mRecyclerViewDone = view.findViewById(R.id.done_recyclerview);
         mLayoutEmptyRecyclerview = view.findViewById(R.id.layout_empty_recyclerview);
     }
 
+
     private void initViews() {
         mRecyclerViewDone.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
-        updateRecyclerview();
-    }
-
-    public void updateRecyclerview() {
         List<Task> doneTasks = mDatabase.getDemoDao().getAllTaksByState(State.DONE, mUserId);
-        if (doneTasks.size() == 0) {
-            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        if (mDoneAdapter == null) {
+            mDoneAdapter = new TaskAdapter(doneTasks, this);
+            mRecyclerViewDone.setAdapter(mDoneAdapter);
         } else {
-            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
-            if (mDoneAdapter == null) {
-                mDoneAdapter = new TaskAdapter(doneTasks, this);
-                mRecyclerViewDone.setAdapter(mDoneAdapter);
-            } else {
-                mDoneAdapter.setTasks(doneTasks);
-                mRecyclerViewDone.setAdapter(mDoneAdapter);
-                mDoneAdapter.notifyDataSetChanged();
-            }
+            updateRecyclerview();
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -97,17 +91,23 @@ public class DoneFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mDoneAdapter.getFilter().filter(newText);
+                if (mDoneAdapter != null) {
+                    mDoneAdapter.getFilter().filter(newText);
+                }
                 return true;
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    public void updateRecyclerview() {
+        mDoneAdapter.updateTasks(mDatabase.getDemoDao().getAllTaksByState(State.DONE, mUserId));
     }
 }
 

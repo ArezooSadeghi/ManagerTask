@@ -1,5 +1,6 @@
 package com.example.managertask.adapter;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.managertask.R;
+import com.example.managertask.diffutils.DiffUtilsCallbacks;
 import com.example.managertask.fragment.TaskInformationDialog;
 import com.example.managertask.model.Task;
+import com.example.managertask.utils.DateUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -61,8 +65,26 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     }
 
     @Override
+    public void onBindViewHolder(@NonNull TaskHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty())
+            super.onBindViewHolder(holder, position, payloads);
+        else {
+            Bundle bundle = (Bundle) payloads.get(0);
+            for (String key : bundle.keySet())
+                holder.bindTask((Task) bundle.getSerializable(DiffUtilsCallbacks.TASK_BUNDLE));
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return mTasksFiltered.size();
+    }
+
+    public void updateTasks(List<Task> newTasks) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilsCallbacks(mTasks, newTasks));
+        diffResult.dispatchUpdatesTo(this);
+        mTasks.clear();
+        mTasks.addAll(newTasks);
     }
 
     @Override
@@ -76,7 +98,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
                 } else {
                     mTasksFiltered = new ArrayList<>();
                     for (Task task : mTasks) {
-                        if (task.getTitle().toLowerCase().contains(userInput)) {
+                        if (task.getTitle().toLowerCase().contains(userInput) ||
+                                task.getDescription().toLowerCase().contains(userInput) ||
+                                DateUtils.dateFormating(task.getDate()).toLowerCase().contains(userInput)) {
                             mTasksFiltered.add(task);
                         }
                     }

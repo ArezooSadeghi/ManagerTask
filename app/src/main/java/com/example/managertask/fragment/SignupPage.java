@@ -2,6 +2,7 @@ package com.example.managertask.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,26 @@ public class SignupPage extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_signup_page, container, false);
         findViews(view);
+        initViews();
+        setListeners();
+        return view;
+    }
+
+
+    private void findViews(View view) {
+        mButtonSignup = view.findViewById(R.id.btn_signup);
+        mButtonBack = view.findViewById(R.id.btn_back);
+        mEditTextUsername = view.findViewById(R.id.txt_username);
+        mEditTextPassword = view.findViewById(R.id.txt_password);
+    }
+
+
+    private void initViews() {
+        mEditTextPassword.setTransformationMethod(new PasswordTransformationMethod());
+    }
+
+
+    private void setListeners() {
         mButtonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,8 +105,8 @@ public class SignupPage extends Fragment {
                 mCallbacks.backClicked();
             }
         });
-        return view;
     }
+
 
     private void addNewUser() {
         User newUser = new User();
@@ -94,13 +115,6 @@ public class SignupPage extends Fragment {
         mDatabase.getDemoDao().insertUser(newUser);
         Toast.makeText(getActivity(), "Your registration was successful",
                 Toast.LENGTH_SHORT).show();
-    }
-
-    private void findViews(View view) {
-        mButtonSignup = view.findViewById(R.id.btn_signup);
-        mButtonBack = view.findViewById(R.id.btn_back);
-        mEditTextUsername = view.findViewById(R.id.txt_username);
-        mEditTextPassword = view.findViewById(R.id.txt_password);
     }
 
     public interface SignupCallbacks {

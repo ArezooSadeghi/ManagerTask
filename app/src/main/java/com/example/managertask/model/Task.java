@@ -5,12 +5,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity(tableName = "task_table")
-public class Task {
+public class Task implements Comparable, Serializable {
 
     @NonNull
     @PrimaryKey
@@ -104,5 +105,15 @@ public class Task {
 
     public UUID getUserTaskId() {
         return mUserTaskId;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Task task = (Task) o;
+        if (task.getTaskId().equals(this.mTaskId)) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }

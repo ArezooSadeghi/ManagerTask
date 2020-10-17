@@ -2,15 +2,10 @@ package com.example.managertask.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,20 +15,20 @@ import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class TodoFragment extends Fragment {
     private static final String ARGS_USER_ID = "userId";
+    private LinearLayout mLayoutEmptyRecyclerview;
     private RecyclerView mRecyclerViewTodo;
     private DemoDatabase mDatabase;
-    private LinearLayout mLayoutEmptyRecyclerview;
     private TaskAdapter mTodoAdapter;
     private UUID mUserId;
 
     public TodoFragment() {
     }
+
 
     public static TodoFragment newInstance(UUID userId) {
         TodoFragment fragment = new TodoFragment();
@@ -43,11 +38,14 @@ public class TodoFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,36 +54,28 @@ public class TodoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_todo, container, false);
         findViews(view);
         initViews();
-        setHasOptionsMenu(true);
         return view;
     }
+
 
     private void findViews(View view) {
         mRecyclerViewTodo = view.findViewById(R.id.todo_recyclerview);
         mLayoutEmptyRecyclerview = view.findViewById(R.id.layout_empty_recyclerview);
     }
 
+
     private void initViews() {
         mRecyclerViewTodo.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
-    }
-
-    public void updateRecyclerview() {
-        List<Task> tasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
-        if (tasks.size() == 0) {
-            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        List<Task> todoTasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
+        if (mTodoAdapter == null) {
+            mTodoAdapter = new TaskAdapter(todoTasks, this);
+            mRecyclerViewTodo.setAdapter(mTodoAdapter);
         } else {
-            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
-            if (mTodoAdapter == null) {
-                mTodoAdapter = new TaskAdapter(tasks, this);
-                mRecyclerViewTodo.setAdapter(mTodoAdapter);
-            } else {
-                mTodoAdapter.setTasks(tasks);
-                mRecyclerViewTodo.setAdapter(mTodoAdapter);
-                mTodoAdapter.notifyDataSetChanged();
-            }
+            updateRecyclerview();
         }
     }
+
 
     /*@Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -107,6 +97,10 @@ public class TodoFragment extends Fragment {
         });
         super.onCreateOptionsMenu(menu, inflater);
     }*/
+
+    public void updateRecyclerview() {
+        mTodoAdapter.updateTasks(mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId));
     }
+}
 
 
