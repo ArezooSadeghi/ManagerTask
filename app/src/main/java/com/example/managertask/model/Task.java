@@ -110,7 +110,9 @@ public class Task implements Comparable, Serializable {
     @Override
     public int compareTo(Object o) {
         Task task = (Task) o;
-        if (task.getTaskId().equals(this.mTaskId)) {
+        if (task.getTitle().equals(this.mTitle) && (task.getDescription().equals(this.mDescription))
+               && (task.getDate().equals(this.mDate)) && (task.getTime().equals(this.mTime)) &&
+                (task.getState().equals(this.mState))) {
             return 0;
         } else {
             return 1;

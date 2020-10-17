@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -135,8 +136,16 @@ public class TaskInformationDialog extends DialogFragment {
             public void onClick(View view) {
                 mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
-                mTask.setDate(mUserSelectedDate);
-                mTask.setTime(mUserSelectedTime);
+                if (mUserSelectedDate == null) {
+                    mTask.setDate(mTask.getDate());
+                } else {
+                    mTask.setDate(mUserSelectedDate);
+                }
+                if (mUserSelectedTime == null) {
+                    mTask.setDate(mTask.getDate());
+                } else {
+                    mTask.setTime(mUserSelectedTime);
+                }
                 if (mCheckBoxDone.isChecked()) {
                     mTask.setState(State.DONE);
                 } else {

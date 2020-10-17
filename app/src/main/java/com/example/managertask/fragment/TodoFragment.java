@@ -73,6 +73,9 @@ public class TodoFragment extends Fragment {
         mRecyclerViewTodo.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
         List<Task> todoTasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
+        if (todoTasks.size() == 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        }
         if (mTodoAdapter == null) {
             mTodoAdapter = new TaskAdapter(todoTasks, this);
             mRecyclerViewTodo.setAdapter(mTodoAdapter);
@@ -106,6 +109,12 @@ public class TodoFragment extends Fragment {
 
 
     public void updateRecyclerview() {
+        if (mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId).size() > 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
+        }
+        if (mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId).size() == 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        }
         mTodoAdapter.updateTasks(mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId));
     }
 }

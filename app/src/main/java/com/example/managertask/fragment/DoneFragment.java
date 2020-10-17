@@ -1,6 +1,9 @@
 package com.example.managertask.fragment;
 
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +23,7 @@ import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
+import com.example.managertask.utils.DateUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -74,6 +78,9 @@ public class DoneFragment extends Fragment {
         mRecyclerViewDone.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
         List<Task> doneTasks = mDatabase.getDemoDao().getAllTaksByState(State.DONE, mUserId);
+        if (doneTasks.size() == 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        }
         if (mDoneAdapter == null) {
             mDoneAdapter = new TaskAdapter(doneTasks, this);
             mRecyclerViewDone.setAdapter(mDoneAdapter);
@@ -86,7 +93,7 @@ public class DoneFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         MenuItem item = menu.findItem(R.id.item_search);
-        final SearchView searchView = (SearchView) item.getActionView();
+        SearchView searchView = (SearchView) item.getActionView();
         searchView.setQueryHint("Search...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -107,6 +114,12 @@ public class DoneFragment extends Fragment {
 
 
     public void updateRecyclerview() {
+        if (mDatabase.getDemoDao().getAllTaksByState(State.DONE, mUserId).size() > 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
+        }
+        if (mDatabase.getDemoDao().getAllTaksByState(State.DONE, mUserId).size() == 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        }
         mDoneAdapter.updateTasks(mDatabase.getDemoDao().getAllTaksByState(State.DONE, mUserId));
     }
 }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -108,16 +107,28 @@ public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialo
 
     @Override
     public void saveClicked() {
-        mDoneFragment.updateRecyclerview();
-        mDoingFragment.updateRecyclerview();
-        mTodoFragment.updateRecyclerview();
+        if (mDoneFragment != null) {
+            mDoneFragment.updateRecyclerview();
+        }
+        if (mDoingFragment != null) {
+            mDoingFragment.updateRecyclerview();
+        }
+        if (mTodoFragment != null) {
+            mTodoFragment.updateRecyclerview();
+        }
     }
 
     @Override
     public void deleteClicked() {
-        mDoneFragment.updateRecyclerview();
-        mDoingFragment.updateRecyclerview();
-        mTodoFragment.updateRecyclerview();
+        if (mDoneFragment != null) {
+            mDoneFragment.updateRecyclerview();
+        }
+        if (mDoingFragment != null) {
+            mDoingFragment.updateRecyclerview();
+        }
+        if (mTodoFragment != null) {
+            mTodoFragment.updateRecyclerview();
+        }
     }
 
     private class TaskPagerAdapter extends FragmentStateAdapter {

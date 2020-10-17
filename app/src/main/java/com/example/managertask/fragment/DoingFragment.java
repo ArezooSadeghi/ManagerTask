@@ -74,6 +74,9 @@ public class DoingFragment extends Fragment {
         mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDatabase = DemoDatabase.getInstance(getActivity());
         List<Task> doingTasks = mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId);
+        if (doingTasks.size() == 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        }
         if (mDoingAdapter == null) {
             mDoingAdapter = new TaskAdapter(doingTasks, this);
             mRecyclerViewDoing.setAdapter(mDoingAdapter);
@@ -86,7 +89,7 @@ public class DoingFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         MenuItem item = menu.findItem(R.id.item_search);
-        final SearchView searchView = (SearchView) item.getActionView();
+        SearchView searchView = (SearchView) item.getActionView();
         searchView.setQueryHint("Search...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -107,6 +110,12 @@ public class DoingFragment extends Fragment {
 
 
     public void updateRecyclerview() {
+        if (mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId).size() > 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.GONE);
+        }
+        if (mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId).size() == 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        }
         mDoingAdapter.updateTasks(mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId));
     }
 }

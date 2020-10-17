@@ -93,8 +93,16 @@ public class NewTaskDialog extends DialogFragment {
                 mTask.setUserTaskId(mUserId);
                 mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
-                mTask.setDate(mUserSelectedDate);
-                mTask.setTime(mUserSelectedTime);
+                if (mUserSelectedDate == null) {
+                    mTask.setDate(new Date());
+                } else {
+                    mTask.setDate(mUserSelectedDate);
+                }
+                if (mUserSelectedTime == null) {
+                    mTask.setTime(new Timestamp(new Date().getTime()));
+                } else {
+                    mTask.setTime(mUserSelectedTime);
+                }
                 if (mCheckBoxDone.isChecked()) {
                     mTask.setState(State.DONE);
                 } else {
