@@ -1,9 +1,12 @@
 package com.example.managertask.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,20 +19,23 @@ import com.example.managertask.model.Task;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> implements Filterable {
     private static final String TAG = "Edit";
     private static final int REQUEST_CODE = 0;
     private List<Task> mTasks;
+    private List<Task> mTasksFiltered;
     private Fragment mFragment;
     private Task mTask;
 
     public TaskAdapter(List<Task> tasks, Fragment fragment) {
         mTasks = tasks;
         mFragment = fragment;
+        mTasksFiltered = mTasks;
     }
 
     public void setTasks(List<Task> tasks) {
@@ -51,12 +57,41 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
-        holder.bindTask(mTasks.get(position));
+        holder.bindTask(mTasksFiltered.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mTasks.size();
+        return mTasksFiltered.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String userInput = charSequence.toString();
+                if (userInput.isEmpty()) {
+                    mTasksFiltered = mTasks;
+                } else {
+                    mTasksFiltered = new ArrayList<>();
+                    for (Task task : mTasks) {
+                        if (task.getTitle().toLowerCase().contains(userInput)) {
+                            mTasksFiltered.add(task);
+                        }
+                    }
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mTasksFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mTasksFiltered = (List<Task>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public class TaskHolder extends RecyclerView.ViewHolder {

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +47,7 @@ public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialo
         findViews();
         setListeners();
         initViews();
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Intent intent = this.getIntent();
         mUserId = (UUID) intent.getSerializableExtra(EXTRA_USER_ID);
     }
@@ -151,8 +152,7 @@ public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialo
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar, menu);
+        getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
 

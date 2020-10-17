@@ -2,10 +2,15 @@ package com.example.managertask.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,6 +57,7 @@ public class DoingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_doing, container, false);
         findViews(view);
         initViews();
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -82,5 +88,27 @@ public class DoingFragment extends Fragment {
             }
         }
     }
-}
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        MenuItem item = menu.findItem(R.id.item_search);
+        final SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mDoingAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    }
+
 
