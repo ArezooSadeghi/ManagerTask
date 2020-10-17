@@ -2,10 +2,15 @@ package com.example.managertask.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import androidx.appcompat.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,26 +82,28 @@ public class TodoFragment extends Fragment {
     }
 
 
-    /*@Override
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         MenuItem item = menu.findItem(R.id.item_search);
-        final SearchView searchView = (SearchView) item.getActionView();
+        SearchView searchView = (SearchView) item.getActionView();
         searchView.setQueryHint("Search...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mTodoAdapter.getFilter().filter(newText);
+                if (mTodoAdapter != null) {
+                    mTodoAdapter.getFilter().filter(newText);
+                }
                 return true;
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
-    }*/
+    }
+
 
     public void updateRecyclerview() {
         mTodoAdapter.updateTasks(mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId));
