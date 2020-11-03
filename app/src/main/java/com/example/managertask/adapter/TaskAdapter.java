@@ -1,7 +1,6 @@
 package com.example.managertask.adapter;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.managertask.R;
 import com.example.managertask.diffutils.DiffUtilsCallbacks;
-import com.example.managertask.fragment.TaskInformationDialog;
+import com.example.managertask.controller.fragment.TaskDetailFragment;
 import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
 
@@ -129,11 +128,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TaskInformationDialog taskInformationDialog = TaskInformationDialog
+                    TaskDetailFragment taskDetailFragment = TaskDetailFragment
                             .newInstance(mTask.getTaskId());
 
-                    taskInformationDialog.setTargetFragment(mFragment, REQUEST_CODE);
-                    taskInformationDialog.show(mFragment.getActivity()
+                    taskDetailFragment.setTargetFragment(mFragment, REQUEST_CODE);
+                    taskDetailFragment.show(mFragment.getActivity()
                             .getSupportFragmentManager(), TAG);
                 }
             });

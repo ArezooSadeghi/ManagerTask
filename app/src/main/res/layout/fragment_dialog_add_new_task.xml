@@ -6,7 +6,7 @@
     android:layout_margin="16dp"
     android:background="@drawable/layout_bg"
     android:orientation="vertical"
-    tools:context=".fragment.NewTaskDialog">
+    tools:context=".controller.fragment.NewTaskDialog">
 
     <TextView
         android:layout_width="wrap_content"

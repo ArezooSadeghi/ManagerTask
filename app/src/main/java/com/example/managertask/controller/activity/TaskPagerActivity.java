@@ -1,4 +1,4 @@
-package com.example.managertask.activity;
+package com.example.managertask.controller.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +15,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.managertask.R;
-import com.example.managertask.fragment.DoingFragment;
-import com.example.managertask.fragment.DoneFragment;
-import com.example.managertask.fragment.NewTaskDialog;
-import com.example.managertask.fragment.TaskInformationDialog;
-import com.example.managertask.fragment.TodoFragment;
+import com.example.managertask.controller.fragment.DoingFragment;
+import com.example.managertask.controller.fragment.DoneFragment;
+import com.example.managertask.controller.fragment.NewTaskDialog;
+import com.example.managertask.controller.fragment.TaskDetailFragment;
+import com.example.managertask.controller.fragment.TodoFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -27,7 +27,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.UUID;
 
 public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialog.Callbacks,
-        TaskInformationDialog.TaskInformationCallbacks, TaskInformationDialog.TaskInformationCallbacks1 {
+        TaskDetailFragment.TaskInformationCallbacks, TaskDetailFragment.TaskInformationCallbacks1 {
     private static final String EXTRA_USER_ID = "com.example.managertask.userId";
     private static final String TAG = "TPA";
     private ViewPager2 mViewPager;

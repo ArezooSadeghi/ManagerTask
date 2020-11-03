@@ -1,4 +1,4 @@
-package com.example.managertask.fragment;
+package com.example.managertask.controller.fragment;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.example.managertask.activity;
+package com.example.managertask.controller.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
-import com.example.managertask.fragment.LoginPage;
-import com.example.managertask.fragment.NewTaskDialog;
-import com.example.managertask.fragment.SignupPage;
+import com.example.managertask.controller.fragment.LoginPage;
+import com.example.managertask.controller.fragment.SignupPage;
 
 import java.util.UUID;
 

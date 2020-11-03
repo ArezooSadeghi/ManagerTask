@@ -1,4 +1,4 @@
-package com.example.managertask.fragment;
+package com.example.managertask.controller.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +23,6 @@ import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

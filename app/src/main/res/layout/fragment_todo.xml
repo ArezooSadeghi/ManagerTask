@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragment.TodoFragment">
+    tools:context=".controller.fragment.TodoFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todo_recyclerview"

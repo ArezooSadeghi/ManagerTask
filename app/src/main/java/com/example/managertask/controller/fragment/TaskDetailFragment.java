@@ -1,4 +1,4 @@
-package com.example.managertask.fragment;
+package com.example.managertask.controller.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +21,7 @@ import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -31,7 +31,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class TaskInformationDialog extends DialogFragment {
+public class TaskDetailFragment extends DialogFragment {
+
     public static final String TASK_ID = "taskId";
     public static final String TAG = "TAG";
     public static final String TAG_2 = "Tag2";
@@ -40,6 +41,7 @@ public class TaskInformationDialog extends DialogFragment {
     public static final String ARGS_POSITION = "position";
     private EditText mEditTextTitle, mEditTextDescription;
     private Button mButtonDate, mButtonTime, mButtonSave, mButtonDelete, mButtonEdit;
+    private ExtendedFloatingActionButton mButtonShare;
     private CheckBox mCheckBoxDone;
     private UUID mTaskId;
     private Task mTask;
@@ -49,11 +51,12 @@ public class TaskInformationDialog extends DialogFragment {
     private TaskInformationCallbacks mCallbacks;
     private TaskInformationCallbacks1 mCallbacks1;
 
-    public TaskInformationDialog() {
+    public TaskDetailFragment() {
+
     }
 
-    public static TaskInformationDialog newInstance(UUID taskId) {
-        TaskInformationDialog fragment = new TaskInformationDialog();
+    public static TaskDetailFragment newInstance(UUID taskId) {
+        TaskDetailFragment fragment = new TaskDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(TASK_ID, taskId);
         fragment.setArguments(args);
@@ -70,7 +73,7 @@ public class TaskInformationDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity())
-                .inflate(R.layout.fragment_task_information_dialog, null);
+                .inflate(R.layout.fragment_detail_task, null);
 
         findViews(view);
         initViews();
@@ -90,6 +93,7 @@ public class TaskInformationDialog extends DialogFragment {
         mButtonSave = view.findViewById(R.id.save_task_information);
         mButtonDelete = view.findViewById(R.id.delete_task_information);
         mButtonEdit = view.findViewById(R.id.edit_task_information);
+        mButtonShare = view.findViewById(R.id.fab_share);
         mCheckBoxDone = view.findViewById(R.id.state_task_information);
     }
 
@@ -161,7 +165,7 @@ public class TaskInformationDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(mTask.getDate());
-                datePickerDialog.setTargetFragment(TaskInformationDialog.this,
+                datePickerDialog.setTargetFragment(TaskDetailFragment.this,
                         DATE_PICKER_REQUEST_CODE);
                 datePickerDialog.show(getActivity().getSupportFragmentManager(), TAG);
             }
@@ -170,7 +174,7 @@ public class TaskInformationDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(mTask.getTime());
-                timePickerDialog.setTargetFragment(TaskInformationDialog.this,
+                timePickerDialog.setTargetFragment(TaskDetailFragment.this,
                         TIME_PICKER_REQUEST_CODE);
                 timePickerDialog.show(getActivity().getSupportFragmentManager(), TAG_2);
             }
@@ -184,11 +188,33 @@ public class TaskInformationDialog extends DialogFragment {
                 dismiss();
             }
         });
+
+        mButtonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, getReport());
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(
+                        sendIntent, getString(R.string.send_report));
+                startActivity(shareIntent);
+            }
+        });
     }
 
-
-
-
+    private String getReport() {
+        String title = mTask.getTitle();
+        String description = mTask.getDescription();
+        String state = mTask.getState().name().toLowerCase();
+        String date = DateUtils.dateFormating(mTask.getDate());
+        return getString(
+                R.string.task_report,
+                title,
+                description,
+                state,
+                date
+        );
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

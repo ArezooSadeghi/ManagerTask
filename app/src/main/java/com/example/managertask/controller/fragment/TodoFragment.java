@@ -1,4 +1,4 @@
-package com.example.managertask.fragment;
+package com.example.managertask.controller.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

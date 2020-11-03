@@ -1,9 +1,6 @@
-package com.example.managertask.fragment;
+package com.example.managertask.controller.fragment;
 
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +20,6 @@ import com.example.managertask.adapter.TaskAdapter;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
-import com.example.managertask.utils.DateUtils;
 
 import java.util.List;
 import java.util.UUID;
