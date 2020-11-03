@@ -13,6 +13,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginBottom="2dp"
         android:text="Title"
         android:textSize="18sp" />
 
@@ -20,8 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/title_task_information"
@@ -36,8 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/description_task_information"
@@ -53,16 +54,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="2dp" />
 
     <Button
         android:id="@+id/time_task_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="2dp" />
 
     <CheckBox
         android:id="@+id/state_task_information"
@@ -110,7 +111,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="15dp"
         android:text="Share Task"
         android:textAllCaps="false" />
 

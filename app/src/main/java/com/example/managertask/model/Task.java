@@ -36,6 +36,9 @@ public class Task implements Comparable, Serializable {
     @ColumnInfo(name = "usertaskid")
     private UUID mUserTaskId;
 
+    @ColumnInfo(name = "taskphoto")
+    private String mPathPhoto;
+
     public Task() {
         mTaskId = UUID.randomUUID();
     }
@@ -53,6 +56,10 @@ public class Task implements Comparable, Serializable {
 
     public void setTaskId(UUID taskId) {
         mTaskId = taskId;
+    }
+
+    public void setPathPhoto(String pathPhoto) {
+        mPathPhoto = pathPhoto;
     }
 
     public void setTitle(String title) {
@@ -83,6 +90,10 @@ public class Task implements Comparable, Serializable {
         return mTaskId;
     }
 
+    public String getPathPhoto() {
+        return mPathPhoto;
+    }
+
     public String getTitle() {
         return mTitle;
     }
@@ -105,6 +116,10 @@ public class Task implements Comparable, Serializable {
 
     public UUID getUserTaskId() {
         return mUserTaskId;
+    }
+
+    public String getPhotoFileName() {
+        return "IMG_MY Photo.jpg";
     }
 
     @Override

@@ -1,12 +1,17 @@
 package com.example.managertask.adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Path;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +25,7 @@ import com.example.managertask.controller.fragment.TaskDetailFragment;
 import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +58,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     @NonNull
     @Override
     public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.task_row,
+        View view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.detail_item,
                 parent,
                 false);
         return new TaskHolder(view);
@@ -120,6 +126,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     public class TaskHolder extends RecyclerView.ViewHolder {
         private TextView mTextViewTitle, mTextViewDate, mTextViewTime;
         private Button mButtonFirstLetter;
+        private ImageView mPhoto;
         private Task mTask;
 
         public TaskHolder(@NonNull final View itemView) {
@@ -143,6 +150,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
             mTextViewDate = itemView.findViewById(R.id.txt_date);
             mTextViewTime = itemView.findViewById(R.id.txt_time);
             mButtonFirstLetter = itemView.findViewById(R.id.fab_first_letter);
+            mPhoto = itemView.findViewById(R.id.img_task);
         }
 
         private void bindTask(Task task) {
@@ -156,6 +164,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             mTextViewTime.setText(simpleDateFormat.format(calendar.getTime()));
             mButtonFirstLetter.setText(task.getTitle().substring(0, 1));
+            /*File imgFile = new File(task.getPathPhoto());*/
+            /*Log.d("Arezoo", "" + task.getPathPhoto());*/
+           /* if (*//*imgFile != null && *//*imgFile.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                mPhoto.setImageBitmap(bitmap);
+            }*/
         }
     }
 }

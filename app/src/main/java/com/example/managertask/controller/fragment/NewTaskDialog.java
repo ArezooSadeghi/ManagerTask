@@ -3,17 +3,26 @@ package com.example.managertask.controller.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.managertask.R;
@@ -22,18 +31,26 @@ import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class NewTaskDialog extends DialogFragment {
     private static final String ARGS_USER_ID = "userId";
+    public static final int REQUEST_CODE_IMAGE_CAPTURE = 2;
+    public static final String TAG = "error";
     private Button mButtonSave, mButtonDate, mButtonTime;
     private EditText mEditTextTitle, mEditTextDescription;
+    public static final String AUTHORITY = "com.example.managertask.fileProvider";
     private CheckBox mCheckBoxDone;
+    private ImageButton mButtonPhoto;
     private DemoDatabase mDatabase;
+    private File mPhotoFile;
+    private Uri mTaskUri;
     private Task mTask;
     private UUID mUserId;
     private Callbacks mCallbacks;
@@ -59,6 +76,8 @@ public class NewTaskDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
+        mDatabase = DemoDatabase.getInstance(getContext());
+        mPhotoFile = mDatabase.getPhotoFile(getContext());
     }
 
     @NonNull
@@ -78,6 +97,7 @@ public class NewTaskDialog extends DialogFragment {
         mButtonSave = view.findViewById(R.id.btn_save);
         mButtonDate = view.findViewById(R.id.btn_date);
         mButtonTime = view.findViewById(R.id.btn_time);
+        mButtonPhoto = view.findViewById(R.id.img_take_photo);
         mCheckBoxDone = view.findViewById(R.id.checkbox_done);
         mEditTextTitle = view.findViewById(R.id.edittext_title);
         mEditTextDescription = view.findViewById(R.id.edittext_description);
@@ -88,6 +108,7 @@ public class NewTaskDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mTask = new Task();
+
                 mTask.setUserTaskId(mUserId);
                 mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
@@ -106,7 +127,7 @@ public class NewTaskDialog extends DialogFragment {
                 } else {
                     mTask.setState(State.DOING);
                 }
-                mDatabase = DemoDatabase.getInstance(getActivity());
+                /*mTask.setPathPhoto(mTaskUri.toString());*/
                 mDatabase.getDemoDao().insertTask(mTask);
                 mCallbacks.okClicked();
                 dismiss();
@@ -130,6 +151,51 @@ public class NewTaskDialog extends DialogFragment {
                 timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG2);
             }
         });
+
+        mButtonPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePhotoIntent();
+
+            }
+
+            private void takePhotoIntent() {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                try {
+                    if ( mPhotoFile != null && takePictureIntent
+                            .resolveActivity(getActivity().getPackageManager()) != null) {
+                        mTaskUri = getUriForFile();
+
+                        List<ResolveInfo> activities = getActivity().getPackageManager()
+                                .queryIntentActivities(
+                                        takePictureIntent,
+                                        PackageManager.MATCH_DEFAULT_ONLY);
+
+                        for (ResolveInfo activity:activities) {
+                            getActivity().grantUriPermission(
+                                    activity.activityInfo.packageName,
+                                    mTaskUri,
+                                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                            );
+
+                        }
+
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mTaskUri);
+                        startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
+                    }
+                } catch (ActivityNotFoundException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    private Uri getUriForFile() {
+        return FileProvider.getUriForFile(
+                getContext(),
+                AUTHORITY,
+                mPhotoFile
+        );
     }
 
     private void initViews() {
@@ -145,6 +211,7 @@ public class NewTaskDialog extends DialogFragment {
             return;
         }
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
+            Log.d("Arezoo", "" + "Come");
             mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
             mButtonDate.setText(DateUtils.dateFormating(mUserSelectedDate));
         }
@@ -155,6 +222,13 @@ public class NewTaskDialog extends DialogFragment {
             calendar.setTimeInMillis(mUserSelectedTime.getTime());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+        }
+
+       if (requestCode == REQUEST_CODE_IMAGE_CAPTURE) {
+            Log.d("Arezoo", "" + "Come");
+             Uri photoUri = getUriForFile();
+             /*mTask.setPathPhoto(photoUri.toString());*/
+             getActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
     }
 

@@ -44,6 +44,9 @@ public interface DemoDao {
     @Query("SELECT * FROM task_table WHERE usertaskid=:userId")
     List<Task> getAllTasksForEveryUser(UUID userId);
 
+    @Query("SELECT * FROM task_table WHERE id=:taskId")
+    Task getTask(UUID taskId);
+
     @Query("SELECT * FROM task_table WHERE usertaskid=:taskId AND state=:taskState")
     List<Task> getAllTaksByState(State taskState, UUID taskId);
 }
