@@ -164,12 +164,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             mTextViewTime.setText(simpleDateFormat.format(calendar.getTime()));
             mButtonFirstLetter.setText(task.getTitle().substring(0, 1));
-            /*File imgFile = new File(task.getPathPhoto());*/
-            /*Log.d("Arezoo", "" + task.getPathPhoto());*/
-           /* if (*//*imgFile != null && *//*imgFile.exists()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            File filesDir = mFragment.getActivity().getFilesDir();
+            File photoFile = new File(filesDir, task.getPathPhoto());
+            Log.d("Arezoo", "" + task.getPathPhoto());
+            if (photoFile != null && photoFile.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 mPhoto.setImageBitmap(bitmap);
-            }*/
+            }
         }
     }
 }

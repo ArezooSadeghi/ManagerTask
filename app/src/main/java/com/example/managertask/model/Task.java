@@ -118,10 +118,6 @@ public class Task implements Comparable, Serializable {
         return mUserTaskId;
     }
 
-    public String getPhotoFileName() {
-        return "IMG_MY Photo.jpg";
-    }
-
     @Override
     public int compareTo(Object o) {
         Task task = (Task) o;

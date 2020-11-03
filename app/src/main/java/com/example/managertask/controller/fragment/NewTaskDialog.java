@@ -32,6 +32,8 @@ import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,6 +52,7 @@ public class NewTaskDialog extends DialogFragment {
     private ImageButton mButtonPhoto;
     private DemoDatabase mDatabase;
     private File mPhotoFile;
+    private String mNameOfFile;
     private Uri mTaskUri;
     private Task mTask;
     private UUID mUserId;
@@ -77,7 +80,7 @@ public class NewTaskDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
         mDatabase = DemoDatabase.getInstance(getContext());
-        mPhotoFile = mDatabase.getPhotoFile(getContext());
+        mPhotoFile = mDatabase.getPhotoFile(getActivity());
     }
 
     @NonNull
@@ -127,7 +130,8 @@ public class NewTaskDialog extends DialogFragment {
                 } else {
                     mTask.setState(State.DOING);
                 }
-                /*mTask.setPathPhoto(mTaskUri.toString());*/
+
+                mTask.setPathPhoto(mNameOfFile);
                 mDatabase.getDemoDao().insertTask(mTask);
                 mCallbacks.okClicked();
                 dismiss();
@@ -155,38 +159,49 @@ public class NewTaskDialog extends DialogFragment {
         mButtonPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePhotoIntent();
-
-            }
-
-            private void takePhotoIntent() {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                try {
-                    if ( mPhotoFile != null && takePictureIntent
-                            .resolveActivity(getActivity().getPackageManager()) != null) {
-                        mTaskUri = getUriForFile();
 
-                        List<ResolveInfo> activities = getActivity().getPackageManager()
+                if (mPhotoFile != null && takePictureIntent
+                        .resolveActivity(getActivity().getPackageManager()) != null) {
+                    File photoFile = null;
+
+                    try {
+                        File filesDir = getActivity().getFilesDir();
+                        photoFile = new File(filesDir, "IMG_" + UUID.randomUUID() + ".jpg");
+                        mNameOfFile = photoFile.getName();
+
+
+
+
+
+                    } catch (ActivityNotFoundException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+
+                    if (photoFile != null) {
+                        Uri photoUri = FileProvider.getUriForFile(getContext(),
+                                AUTHORITY,
+                                photoFile);
+                        List<ResolveInfo> activities = getActivity()
+                                .getPackageManager()
                                 .queryIntentActivities(
                                         takePictureIntent,
-                                        PackageManager.MATCH_DEFAULT_ONLY);
+                                        PackageManager.MATCH_DEFAULT_ONLY
+                                );
 
-                        for (ResolveInfo activity:activities) {
+                        for (ResolveInfo activity : activities) {
                             getActivity().grantUriPermission(
                                     activity.activityInfo.packageName,
-                                    mTaskUri,
+                                    photoUri,
                                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                             );
-
                         }
-
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mTaskUri);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                         startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
                     }
-                } catch (ActivityNotFoundException e) {
-                    Log.e(TAG, e.getMessage(), e);
                 }
             }
+
         });
     }
 
@@ -207,11 +222,11 @@ public class NewTaskDialog extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode != Activity.RESULT_OK || data == null) {
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
+
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
-            Log.d("Arezoo", "" + "Come");
             mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
             mButtonDate.setText(DateUtils.dateFormating(mUserSelectedDate));
         }
@@ -224,12 +239,10 @@ public class NewTaskDialog extends DialogFragment {
             mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
         }
 
-       if (requestCode == REQUEST_CODE_IMAGE_CAPTURE) {
-            Log.d("Arezoo", "" + "Come");
-             Uri photoUri = getUriForFile();
-             /*mTask.setPathPhoto(photoUri.toString());*/
-             getActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        }
+        if (requestCode == REQUEST_CODE_IMAGE_CAPTURE) {
+                mTaskUri = getUriForFile();
+                getActivity().revokeUriPermission(mTaskUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
     }
 
     public interface Callbacks {
@@ -243,4 +256,38 @@ public class NewTaskDialog extends DialogFragment {
             mCallbacks = (NewTaskDialog.Callbacks) context;
         }
     }
+
+    private void grantWriteUriToAllResolvedActivities(Intent takePictureIntent, Uri photoUri) {
+        List<ResolveInfo> activities = getActivity().getPackageManager()
+                .queryIntentActivities(
+                        takePictureIntent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+
+        for (ResolveInfo activity: activities) {
+            getActivity().grantUriPermission(
+                    activity.activityInfo.packageName,
+                    photoUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
+    }
+
+    private void takePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            if (mPhotoFile != null && takePictureIntent
+                    .resolveActivity(getActivity().getPackageManager()) != null) {
+
+                Uri photoUri = getUriForFile();
+
+                grantWriteUriToAllResolvedActivities(takePictureIntent, photoUri);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
+            }
+        } catch (ActivityNotFoundException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+
 }

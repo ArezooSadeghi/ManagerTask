@@ -11,6 +11,7 @@ import com.example.managertask.model.Task;
 import com.example.managertask.model.User;
 
 import java.io.File;
+import java.util.UUID;
 
 @Database(entities = {User.class, Task.class}, version = 1, exportSchema = false)
 @TypeConverters({Converter.class})
@@ -36,8 +37,13 @@ public abstract class DemoDatabase extends RoomDatabase {
 
     public File getPhotoFile(Context context) {
         File filesDir = context.getFilesDir();
-        File photoFile = new File(filesDir, "IMG_MY Photo.jpg");
+        File photoFile = new File(filesDir, getPhotoFileName());
         return photoFile;
     }
+
+    public String getPhotoFileName() {
+        return "IMG_" + UUID.randomUUID() + ".jpg";
+    }
+
 }
 
