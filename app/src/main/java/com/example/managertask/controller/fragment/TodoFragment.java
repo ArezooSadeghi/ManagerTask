@@ -117,6 +117,11 @@ public class TodoFragment extends Fragment {
         }
         mTodoAdapter.updateTasks(mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId));
     }
+
+    public void allRemoved() {
+        mDatabase.getDemoDao().deleteAllTasksForUser(mUserId);
+        updateRecyclerview();
+    }
 }
 
 

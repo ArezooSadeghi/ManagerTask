@@ -18,6 +18,7 @@ import com.example.managertask.R;
 import com.example.managertask.controller.fragment.DoingFragment;
 import com.example.managertask.controller.fragment.DoneFragment;
 import com.example.managertask.controller.fragment.NewTaskDialog;
+import com.example.managertask.controller.fragment.RemoveTasksFragment;
 import com.example.managertask.controller.fragment.TaskDetailFragment;
 import com.example.managertask.controller.fragment.TodoFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,7 +28,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.UUID;
 
 public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialog.Callbacks,
-        TaskDetailFragment.TaskInformationCallbacks, TaskDetailFragment.TaskInformationCallbacks1 {
+        TaskDetailFragment.TaskInformationCallbacks, TaskDetailFragment.TaskInformationCallbacks1,
+RemoveTasksFragment.ItemRemoved{
     private static final String EXTRA_USER_ID = "com.example.managertask.userId";
     private static final String TAG = "TPA";
     private ViewPager2 mViewPager;
@@ -131,6 +133,19 @@ public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialo
         }
     }
 
+    @Override
+    public void itemRemovedClicked() {
+        if (mDoneFragment != null) {
+            mDoneFragment.allRemoved();
+        }
+        if (mDoingFragment != null) {
+            mDoingFragment.allRemoved();
+        }
+        if (mTodoFragment != null) {
+            mTodoFragment.allRemoved();
+        }
+    }
+
     private class TaskPagerAdapter extends FragmentStateAdapter {
 
         private final static int NUMBER_OF_PAGES = 3;
@@ -175,10 +190,17 @@ public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialo
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.item_logout) {
-            Intent intent = ContainerActivity.newIntent(this);
-            startActivity(intent);
+        switch (item.getItemId()) {
+            case R.id.item_logout:
+                Intent intent = ContainerActivity.newIntent(this);
+                startActivity(intent);
+                return true;
+            case R.id.item_remove:
+                RemoveTasksFragment fragment = RemoveTasksFragment.newInstance();
+                fragment.show(getSupportFragmentManager(), "taskpageractivity");
+                return true;
+            default:
+                return false;
         }
-        return true;
     }
 }

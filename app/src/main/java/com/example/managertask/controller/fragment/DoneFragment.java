@@ -118,6 +118,11 @@ public class DoneFragment extends Fragment {
         }
         mDoneAdapter.updateTasks(mDatabase.getDemoDao().getAllTaksByState(State.DONE, mUserId));
     }
+
+    public void allRemoved() {
+        mDatabase.getDemoDao().deleteAllTasksForUser(mUserId);
+        updateRecyclerview();
+    }
 }
 
 
