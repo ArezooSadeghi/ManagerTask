@@ -169,7 +169,7 @@ public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialo
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
+        getMenuInflater().inflate(R.menu.user_toolbar_menu, menu);
         return true;
     }
 

@@ -8,13 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
+import com.example.managertask.controller.fragment.AdminLoginPageFragment;
 import com.example.managertask.controller.fragment.LoginPage;
 import com.example.managertask.controller.fragment.SignupPage;
 
 import java.util.UUID;
 
 public class ContainerActivity extends AppCompatActivity implements LoginPage.LoginCallbacks,
-        SignupPage.SignupCallbacks, LoginPage.LoginCallbacksTaskPager {
+        SignupPage.SignupCallbacks, LoginPage.LoginCallbacksTaskPager, LoginPage.LoginAdminCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,14 @@ public class ContainerActivity extends AppCompatActivity implements LoginPage.Lo
     public void loginClicked(UUID userId) {
         Intent intent = TaskPagerActivity.newIntent(this, userId);
         startActivity(intent);
+    }
+
+    @Override
+    public void AdminLoginClicked() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, AdminLoginPageFragment.newInstance())
+                .commit();
     }
 
     public static Intent newIntent(Context context) {

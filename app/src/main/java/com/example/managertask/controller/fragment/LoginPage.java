@@ -16,16 +16,19 @@ import androidx.fragment.app.Fragment;
 import com.example.managertask.R;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.User;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.List;
 import java.util.UUID;
 
 public class LoginPage extends Fragment {
+    private ExtendedFloatingActionButton mButtonLoginAdmin;
     private Button mButtonSignup, mButtonLogin;
     private EditText mEditTextUsename, mEditTextPassword;
     private DemoDatabase mDatabase;
     private LoginCallbacks mCallbacks;
     private LoginCallbacksTaskPager mCallbacksTaskPager;
+    private LoginAdminCallback mAdminCallback;
 
     public LoginPage() {
     }
@@ -56,6 +59,7 @@ public class LoginPage extends Fragment {
     private void findViews(View view) {
         mButtonSignup = view.findViewById(R.id.btn_signup);
         mButtonLogin = view.findViewById(R.id.btn_login);
+        mButtonLoginAdmin = view.findViewById(R.id.fab_login_admin);
         mEditTextUsename = view.findViewById(R.id.txt_username);
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
@@ -104,6 +108,13 @@ public class LoginPage extends Fragment {
                 }
             }
         });
+
+        mButtonLoginAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAdminCallback.AdminLoginClicked();
+            }
+        });
     }
 
     public interface LoginCallbacks {
@@ -114,15 +125,21 @@ public class LoginPage extends Fragment {
         void loginClicked(UUID userId);
     }
 
+    public interface LoginAdminCallback {
+        void AdminLoginClicked();
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof LoginCallbacks) {
             mCallbacks = (LoginCallbacks) context;
         }
-
         if (context instanceof LoginCallbacksTaskPager) {
             mCallbacksTaskPager = (LoginCallbacksTaskPager) context;
+        }
+        if (context instanceof LoginAdminCallback) {
+            mAdminCallback = (LoginAdminCallback) context;
         }
     }
 }

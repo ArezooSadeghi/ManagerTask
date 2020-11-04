@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.managertask.model.Admin;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 import com.example.managertask.model.User;
@@ -23,6 +24,9 @@ public interface DemoDao {
     @Insert
     void insertTask(Task task);
 
+    @Insert
+    void inserAdmin(Admin admin);
+
     @Delete
     void deleteUser(User user);
 
@@ -34,6 +38,9 @@ public interface DemoDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTask(Task task);
+
+    @Query("SELECT * FROM admin_table")
+    List<Admin> getAdmins();
 
     @Query("SELECT * FROM task_table")
     List<Task> getAllTasks();

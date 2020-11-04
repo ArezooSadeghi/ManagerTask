@@ -2,7 +2,6 @@ package com.example.managertask.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Path;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,7 +57,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     @NonNull
     @Override
     public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.detail_item,
+        View view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.detail_task_item,
                 parent,
                 false);
         return new TaskHolder(view);
@@ -166,7 +165,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
             mButtonFirstLetter.setText(task.getTitle().substring(0, 1));
             File filesDir = mFragment.getActivity().getFilesDir();
             File photoFile = new File(filesDir, task.getPathPhoto());
-            Log.d("Arezoo", "" + task.getPathPhoto());
             if (photoFile != null && photoFile.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 mPhoto.setImageBitmap(bitmap);

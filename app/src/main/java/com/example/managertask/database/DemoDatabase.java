@@ -7,13 +7,14 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.example.managertask.model.Admin;
 import com.example.managertask.model.Task;
 import com.example.managertask.model.User;
 
 import java.io.File;
 import java.util.UUID;
 
-@Database(entities = {User.class, Task.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, Task.class, Admin.class}, version = 1, exportSchema = false)
 @TypeConverters({Converter.class})
 public abstract class DemoDatabase extends RoomDatabase {
 
@@ -29,8 +30,14 @@ public abstract class DemoDatabase extends RoomDatabase {
                     .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .build();
+            addAdmin();
         }
         return sDatabase;
+    }
+
+    private static void addAdmin() {
+        Admin admin = new Admin("Arezoo", "6660279350");
+        sDatabase.getDemoDao().inserAdmin(admin);
     }
 
     public abstract DemoDao getDemoDao();

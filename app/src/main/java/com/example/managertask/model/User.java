@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Entity(tableName = "user_table")
@@ -21,14 +22,27 @@ public class User {
     @ColumnInfo(name = "password")
     private String mPassword;
 
+    @ColumnInfo(name = "registerydate")
+    private Date mRegisteryDate;
+
     public User() {
         mUserId = UUID.randomUUID();
+        mRegisteryDate = new Date();
     }
 
     public User(String username, String password) {
         mUserId = UUID.randomUUID();
         mUsername = username;
         mPassword = password;
+        mRegisteryDate = new Date();
+    }
+
+    public Date getRegisteryDate() {
+        return mRegisteryDate;
+    }
+
+    public void setRegisteryDate(Date registeryDate) {
+        mRegisteryDate = registeryDate;
     }
 
     public void setUsername(String username) {
