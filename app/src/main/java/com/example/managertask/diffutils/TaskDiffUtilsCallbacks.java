@@ -10,12 +10,12 @@ import com.example.managertask.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiffUtilsCallbacks extends DiffUtil.Callback {
+public class TaskDiffUtilsCallbacks extends DiffUtil.Callback {
     public static final String TASK_BUNDLE = "taskBundle";
     private List<Task> mOldTasks = new ArrayList<>();
     private List<Task> mNewTasks = new ArrayList<>();
 
-    public DiffUtilsCallbacks(List<Task> oldTasks, List<Task> newTasks) {
+    public TaskDiffUtilsCallbacks(List<Task> oldTasks, List<Task> newTasks) {
         mOldTasks = oldTasks;
         mNewTasks = newTasks;
     }

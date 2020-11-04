@@ -59,7 +59,12 @@ public class UsersListFragment extends Fragment {
 
     private void setUpAdapter() {
         List<User> users = mDatabase.getDemoDao().getAllUsers();
-        mAdapter = new UserAdapter(users, getContext());
+        mAdapter = new UserAdapter(users,getContext(), new UserAdapter.RemoveCallback(){
+            @Override
+            public void removeClicked() {
+               mAdapter.updateUsers(mDatabase.getDemoDao().getAllUsers());
+            }
+        });
         mRecyclerViewUserList.setAdapter(mAdapter);
     }
 }

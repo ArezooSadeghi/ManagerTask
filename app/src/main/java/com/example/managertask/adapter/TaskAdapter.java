@@ -3,7 +3,6 @@ package com.example.managertask.adapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.managertask.R;
-import com.example.managertask.diffutils.DiffUtilsCallbacks;
+import com.example.managertask.diffutils.TaskDiffUtilsCallbacks;
 import com.example.managertask.controller.fragment.TaskDetailFragment;
 import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
@@ -75,7 +74,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         else {
             Bundle bundle = (Bundle) payloads.get(0);
             for (String key : bundle.keySet())
-                holder.bindTask((Task) bundle.getSerializable(DiffUtilsCallbacks.TASK_BUNDLE));
+                holder.bindTask((Task) bundle.getSerializable(TaskDiffUtilsCallbacks.TASK_BUNDLE));
         }
     }
 
@@ -85,7 +84,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     }
 
     public void updateTasks(List<Task> newTasks) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilsCallbacks(mTasks, newTasks));
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TaskDiffUtilsCallbacks(mTasks, newTasks));
         diffResult.dispatchUpdatesTo(this);
         mTasks.clear();
         mTasks.addAll(newTasks);

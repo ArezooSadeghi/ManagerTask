@@ -5,11 +5,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity(tableName = "user_table")
-public class User {
+public class User implements Comparable, Serializable {
 
     @NonNull
     @PrimaryKey
@@ -64,5 +65,16 @@ public class User {
 
     public String getPassword() {
         return mPassword;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        User user = (User) o;
+        if (user.getUsername().equals(this.mUsername) &&
+                (user.getPassword().equals(this.mPassword))) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }
