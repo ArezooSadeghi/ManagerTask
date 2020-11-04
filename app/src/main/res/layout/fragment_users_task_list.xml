@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recycler_view_user_list"
+    android:id="@+id/recycler_view_user_task_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.fragment.UsersListFragment">
+    tools:context=".controller.fragment.UserTaskListFragment">
 
 </androidx.recyclerview.widget.RecyclerView>

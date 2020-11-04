@@ -98,6 +98,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
                 @Override
                 public void onClick(View view) {
                     mDatabase.getDemoDao().deleteUser(mUser);
+                    mDatabase.getDemoDao().deleteAllTasksForUser(mUser.getUserId());
                     mCallback.removeClicked();
                 }
             });

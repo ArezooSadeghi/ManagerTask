@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
-import com.example.managertask.controller.activity.UsersListActivity;
+import com.example.managertask.controller.activity.UserTaskListActivity;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.Admin;
 
@@ -65,7 +65,7 @@ public class AdminLoginPageFragment extends Fragment {
                 for (Admin admin:adminList) {
                     if (admin.getUsername().equals(mTextUsername.getText().toString()) &&
                     admin.getPassword().equals(mTextPassword.getText().toString())) {
-                        Intent intent = UsersListActivity.newIntent(getContext());
+                        Intent intent = UserTaskListActivity.newIntent(getContext());
                         startActivity(intent);
                     } else {
                         Toast.makeText(

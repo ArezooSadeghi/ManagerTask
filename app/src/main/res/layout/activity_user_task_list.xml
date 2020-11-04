@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".controller.activity.UserListActivity">
+    tools:context=".controller.activity.UserTaskListActivity">
 
     <FrameLayout
-        android:id="@+id/user_list_container"
+        android:id="@+id/user_task_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

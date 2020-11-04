@@ -16,17 +16,16 @@ import com.example.managertask.model.User;
 
 import java.util.List;
 
-public class UsersListFragment extends Fragment {
+public class UserListFragment extends Fragment {
     private RecyclerView mRecyclerViewUserList;
     private UserAdapter mAdapter;
     private DemoDatabase mDatabase;
 
-    public UsersListFragment() {
-
+    public UserListFragment() {
     }
 
-    public static UsersListFragment newInstance() {
-        UsersListFragment fragment = new UsersListFragment();
+    public static UserListFragment newInstance() {
+        UserListFragment fragment = new UserListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -42,10 +41,10 @@ public class UsersListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_users_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         findViews(view);
         initViews();
-        setUpAdapter();
+        setupAdapter();
         return view;
     }
 
@@ -57,12 +56,12 @@ public class UsersListFragment extends Fragment {
         mRecyclerViewUserList.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void setUpAdapter() {
+    private void setupAdapter() {
         List<User> users = mDatabase.getDemoDao().getAllUsers();
-        mAdapter = new UserAdapter(users,getContext(), new UserAdapter.RemoveCallback(){
+        mAdapter = new UserAdapter(users, getContext(), new UserAdapter.RemoveCallback() {
             @Override
             public void removeClicked() {
-               mAdapter.updateUsers(mDatabase.getDemoDao().getAllUsers());
+                mAdapter.updateUsers(mDatabase.getDemoDao().getAllUsers());
             }
         });
         mRecyclerViewUserList.setAdapter(mAdapter);

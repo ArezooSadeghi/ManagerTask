@@ -43,6 +43,9 @@ public interface DemoDao {
     List<Admin> getAdmins();
 
     @Query("SELECT * FROM task_table")
+    List<Task> getWholeTasks();
+
+    @Query("SELECT * FROM task_table")
     List<Task> getAllTasks();
 
     @Query("SELECT * FROM user_table")
@@ -56,4 +59,7 @@ public interface DemoDao {
 
     @Query("SELECT * FROM task_table WHERE usertaskid=:taskId AND state=:taskState")
     List<Task> getAllTaksByState(State taskState, UUID taskId);
+
+    @Query("DELETE FROM task_table WHERE usertaskid=:userId")
+    void deleteAllTasksForUser(UUID userId);
 }
