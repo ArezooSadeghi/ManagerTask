@@ -18,26 +18,22 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.managertask.R;
-import com.example.managertask.diffutils.TaskDiffUtilsCallbacks;
 import com.example.managertask.controller.fragment.TaskDetailFragment;
+import com.example.managertask.diffutils.TaskDiffUtilCallback;
 import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> implements Filterable {
-    private static final String TAG = "Edit";
-    private static final int REQUEST_CODE = 0;
+
+    private static final String TAG = "TDF";
+    private static final int REQUEST_CODE_TDF = 0;
     private List<Task> mTasks;
     private List<Task> mTasksFiltered;
     private Fragment mFragment;
-    private Task mTask;
 
     public TaskAdapter(List<Task> tasks, Fragment fragment) {
         mTasks = tasks;
@@ -68,13 +64,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskHolder holder, int position, @NonNull List<Object> payloads) {
+    public void onBindViewHolder(
+            @NonNull TaskHolder holder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty())
             super.onBindViewHolder(holder, position, payloads);
         else {
             Bundle bundle = (Bundle) payloads.get(0);
             for (String key : bundle.keySet())
-                holder.bindTask((Task) bundle.getSerializable(TaskDiffUtilsCallbacks.TASK_BUNDLE));
+                holder.bindTask((Task) bundle.getSerializable(TaskDiffUtilCallback.TASK_BUNDLE));
         }
     }
 
@@ -84,7 +81,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     }
 
     public void updateTasks(List<Task> newTasks) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TaskDiffUtilsCallbacks(mTasks, newTasks));
+        DiffUtil.DiffResult diffResult =
+                DiffUtil.calculateDiff(new TaskDiffUtilCallback(mTasks, newTasks));
         diffResult.dispatchUpdatesTo(this);
         mTasks.clear();
         mTasks.addAll(newTasks);
@@ -95,15 +93,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                String userInput = charSequence.toString();
-                if (userInput.isEmpty()) {
+                String query = charSequence.toString();
+                if (query.isEmpty()) {
                     mTasksFiltered = mTasks;
                 } else {
                     mTasksFiltered = new ArrayList<>();
                     for (Task task : mTasks) {
-                        if (task.getTitle().toLowerCase().contains(userInput) ||
-                                task.getDescription().toLowerCase().contains(userInput) ||
-                                DateUtils.dateFormating(task.getDate()).toLowerCase().contains(userInput)) {
+                        if (task.getTitle().toLowerCase().contains(query) ||
+                                task.getDescription().toLowerCase().contains(query) ||
+                                DateUtils.dateFormating(task.getDate()).toLowerCase().
+                                        contains(query)) {
                             mTasksFiltered.add(task);
                         }
                     }
@@ -136,7 +135,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
                     TaskDetailFragment taskDetailFragment = TaskDetailFragment
                             .newInstance(mTask.getTaskId());
 
-                    taskDetailFragment.setTargetFragment(mFragment, REQUEST_CODE);
+                    taskDetailFragment.setTargetFragment(mFragment, REQUEST_CODE_TDF);
                     taskDetailFragment.show(mFragment.getActivity()
                             .getSupportFragmentManager(), TAG);
                 }
@@ -154,13 +153,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         private void bindTask(Task task) {
             mTask = task;
             mTextViewTitle.setText(task.getTitle());
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            Date date = task.getDate();
-            mTextViewDate.setText(dateFormat.format(date));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(task.getTime().getTime());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-            mTextViewTime.setText(simpleDateFormat.format(calendar.getTime()));
+            mTextViewDate.setText(DateUtils.dateFormating(task.getDate()));
+            mTextViewTime.setText(DateUtils.nowTimeStringFormating(task.getTime()));
             mButtonFirstLetter.setText(task.getTitle().substring(0, 1));
             File filesDir = mFragment.getActivity().getFilesDir();
             File photoFile = new File(filesDir, task.getPathPhoto());

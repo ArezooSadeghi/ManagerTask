@@ -15,7 +15,7 @@ public class User implements Comparable, Serializable {
     @NonNull
     @PrimaryKey
     @ColumnInfo(name = "id")
-    public UUID mUserId;
+    private UUID mUserId;
 
     @ColumnInfo(name = "username")
     private String mUsername;
@@ -32,14 +32,10 @@ public class User implements Comparable, Serializable {
     }
 
     public User(String username, String password) {
-        mUserId = UUID.randomUUID();
         mUsername = username;
         mPassword = password;
+        mUserId = UUID.randomUUID();
         mRegisteryDate = new Date();
-    }
-
-    public Date getRegisteryDate() {
-        return mRegisteryDate;
     }
 
     public void setRegisteryDate(Date registeryDate) {
@@ -54,6 +50,10 @@ public class User implements Comparable, Serializable {
         mPassword = password;
     }
 
+    public void setUserId(@NonNull UUID userId) {
+        mUserId = userId;
+    }
+
     @NonNull
     public UUID getUserId() {
         return mUserId;
@@ -65,6 +65,10 @@ public class User implements Comparable, Serializable {
 
     public String getPassword() {
         return mPassword;
+    }
+
+    public Date getRegisteryDate() {
+        return mRegisteryDate;
     }
 
     @Override

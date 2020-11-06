@@ -17,11 +17,13 @@ import com.example.managertask.model.User;
 import java.util.List;
 
 public class UserListFragment extends Fragment {
+
     private RecyclerView mRecyclerViewUserList;
     private UserAdapter mAdapter;
     private DemoDatabase mDatabase;
 
     public UserListFragment() {
+
     }
 
     public static UserListFragment newInstance() {

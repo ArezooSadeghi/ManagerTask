@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,19 +31,16 @@ import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class NewTaskDialog extends DialogFragment {
+public class NewTaskFragment extends DialogFragment {
+
     private static final String ARGS_USER_ID = "userId";
-    public static final int REQUEST_CODE_IMAGE_CAPTURE = 2;
-    public static final String TAG = "error";
+
+    public static final String ERROR = "error";
     private Button mButtonSave, mButtonDate, mButtonTime;
     private EditText mEditTextTitle, mEditTextDescription;
     public static final String AUTHORITY = "com.example.managertask.fileProvider";
@@ -52,23 +48,26 @@ public class NewTaskDialog extends DialogFragment {
     private ImageButton mButtonPhoto;
     private DemoDatabase mDatabase;
     private File mPhotoFile;
-    private String mNameOfFile;
+    private String mPathTaskPhoto;
     private Uri mTaskUri;
     private Task mTask;
     private UUID mUserId;
     private Callbacks mCallbacks;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
-    public static final String TAG1 = "DANTF";
-    public static final String TAG2 = "DANTF";
+    public static final String DPF_TAG = "DPF";
+    public static final String TPF_TAG = "TPF";
+
     public static final int REQUEST_CODE_DATE_PICKER = 0;
     public static final int REQUEST_CODE_TIME_PICKER = 1;
+    public static final int REQUEST_CODE_IMAGE_CAPTURE = 2;
 
-    public NewTaskDialog() {
+    public NewTaskFragment() {
+
     }
 
-    public static NewTaskDialog newInstance(UUID userId) {
-        NewTaskDialog fragment = new NewTaskDialog();
+    public static NewTaskFragment newInstance(UUID userId) {
+        NewTaskFragment fragment = new NewTaskFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARGS_USER_ID, userId);
         fragment.setArguments(args);
@@ -111,7 +110,6 @@ public class NewTaskDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mTask = new Task();
-
                 mTask.setUserTaskId(mUserId);
                 mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
@@ -131,7 +129,7 @@ public class NewTaskDialog extends DialogFragment {
                     mTask.setState(State.DOING);
                 }
 
-                mTask.setPathPhoto(mNameOfFile);
+                mTask.setPathPhoto(mPathTaskPhoto);
                 mDatabase.getDemoDao().insertTask(mTask);
                 mCallbacks.okClicked();
                 dismiss();
@@ -141,18 +139,21 @@ public class NewTaskDialog extends DialogFragment {
         mButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerFragment = DatePickerDialog.newInstance(new Date());
-                datePickerFragment.setTargetFragment(NewTaskDialog.this, REQUEST_CODE_DATE_PICKER);
-                datePickerFragment.show(getActivity().getSupportFragmentManager(), TAG1);
+                DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(new Date());
+                datePickerFragment.setTargetFragment(
+                        NewTaskFragment.this, REQUEST_CODE_DATE_PICKER);
+                datePickerFragment.show(getActivity().getSupportFragmentManager(), DPF_TAG);
             }
         });
 
         mButtonTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerFragment = TimePickerDialog.newInstance(new Timestamp(new Date().getTime()));
-                timePickerFragment.setTargetFragment(NewTaskDialog.this, REQUEST_CODE_TIME_PICKER);
-                timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG2);
+                TimePickerFragment timePickerFragment =
+                        TimePickerFragment.newInstance(new Timestamp(new Date().getTime()));
+                timePickerFragment.setTargetFragment(
+                        NewTaskFragment.this, REQUEST_CODE_TIME_PICKER);
+                timePickerFragment.show(getActivity().getSupportFragmentManager(), TPF_TAG);
             }
         });
 
@@ -166,16 +167,11 @@ public class NewTaskDialog extends DialogFragment {
                     File photoFile = null;
 
                     try {
-                        File filesDir = getActivity().getFilesDir();
-                        photoFile = new File(filesDir, "IMG_" + UUID.randomUUID() + ".jpg");
-                        mNameOfFile = photoFile.getName();
-
-
-
-
+                        photoFile = mDatabase.getPhotoFile(getContext());
+                        mPathTaskPhoto = "" + mPhotoFile;
 
                     } catch (ActivityNotFoundException e) {
-                        Log.e(TAG, e.getMessage(), e);
+                        Log.e(ERROR, e.getMessage(), e);
                     }
 
                     if (photoFile != null) {
@@ -215,9 +211,7 @@ public class NewTaskDialog extends DialogFragment {
 
     private void initViews() {
         mButtonDate.setText(DateUtils.dateFormating(new Date()));
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-        mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+        mButtonTime.setText(DateUtils.nowTimeStringFormating(new Timestamp(new Date().getTime())));
     }
 
     @Override
@@ -227,22 +221,21 @@ public class NewTaskDialog extends DialogFragment {
         }
 
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
-            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog.EXTRA_USER_SELECTED_DATE);
+            mUserSelectedDate = (Date) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_USER_SELECTED_DATE);
             mButtonDate.setText(DateUtils.dateFormating(mUserSelectedDate));
         }
 
         if (requestCode == REQUEST_CODE_TIME_PICKER) {
-            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerDialog.EXTRA_USER_SELECTED_TIME);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(mUserSelectedTime.getTime());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-            mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+            mUserSelectedTime = (Timestamp) data
+                    .getSerializableExtra(TimePickerFragment.EXTRA_USER_SELECTED_TIME);
+            mButtonTime.setText(DateUtils.nowTimeStringFormating(mUserSelectedTime));
         }
 
         if (requestCode == REQUEST_CODE_IMAGE_CAPTURE) {
-                mTaskUri = getUriForFile();
-                getActivity().revokeUriPermission(mTaskUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            }
+            mTaskUri = getUriForFile();
+            getActivity().revokeUriPermission(mTaskUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
     }
 
     public interface Callbacks {
@@ -252,42 +245,8 @@ public class NewTaskDialog extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof NewTaskDialog.Callbacks) {
-            mCallbacks = (NewTaskDialog.Callbacks) context;
+        if (context instanceof NewTaskFragment.Callbacks) {
+            mCallbacks = (NewTaskFragment.Callbacks) context;
         }
     }
-
-    private void grantWriteUriToAllResolvedActivities(Intent takePictureIntent, Uri photoUri) {
-        List<ResolveInfo> activities = getActivity().getPackageManager()
-                .queryIntentActivities(
-                        takePictureIntent,
-                        PackageManager.MATCH_DEFAULT_ONLY);
-
-        for (ResolveInfo activity: activities) {
-            getActivity().grantUriPermission(
-                    activity.activityInfo.packageName,
-                    photoUri,
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        }
-    }
-
-    private void takePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            if (mPhotoFile != null && takePictureIntent
-                    .resolveActivity(getActivity().getPackageManager()) != null) {
-
-                Uri photoUri = getUriForFile();
-
-                grantWriteUriToAllResolvedActivities(takePictureIntent, photoUri);
-
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
-            }
-        } catch (ActivityNotFoundException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
-    }
-
-
 }

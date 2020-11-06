@@ -21,19 +21,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DatePickerDialog extends DialogFragment {
+public class DatePickerFragment extends DialogFragment {
 
     public static final String ARGS_TASK_DATE = "taskDate";
-    public static final String EXTRA_USER_SELECTED_DATE =
-            "com.example.managertask.user selected date";
+    public static final String EXTRA_USER_SELECTED_DATE = "com.example.managertask.userselecteddate";
     private DatePicker mDatePicker;
     private Date mTaskDate;
 
-    public DatePickerDialog() {
+    public DatePickerFragment() {
+
     }
 
-    public static DatePickerDialog newInstance(Date taskDate) {
-        DatePickerDialog fragment = new DatePickerDialog();
+    public static DatePickerFragment newInstance(Date taskDate) {
+        DatePickerFragment fragment = new DatePickerFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARGS_TASK_DATE, taskDate);
         fragment.setArguments(args);
@@ -57,11 +57,7 @@ public class DatePickerDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        int year = mDatePicker.getYear();
-                        int month = mDatePicker.getMonth();
-                        int dayOfMonth = mDatePicker.getDayOfMonth();
-                        GregorianCalendar calendar = new GregorianCalendar(year, month, dayOfMonth);
-                        Date userSelectedDate = calendar.getTime();
+                        Date userSelectedDate = extractDateFromDatePicker();
                         sendResult(userSelectedDate);
                         dismiss();
                     }
@@ -82,6 +78,14 @@ public class DatePickerDialog extends DialogFragment {
         int monthOfYear = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         mDatePicker.init(year, monthOfYear, dayOfMonth, null);
+    }
+
+    private Date extractDateFromDatePicker() {
+        int year = mDatePicker.getYear();
+        int month = mDatePicker.getMonth();
+        int dayOfMonth = mDatePicker.getDayOfMonth();
+        GregorianCalendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+        return calendar.getTime();
     }
 
     public void sendResult(Date userSelectedDate) {

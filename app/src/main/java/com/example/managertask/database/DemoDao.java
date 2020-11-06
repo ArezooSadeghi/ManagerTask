@@ -33,17 +33,20 @@ public interface DemoDao {
     @Delete
     void deleteTask(Task task);
 
-    @Update
+    @Delete
+    void deleteAdmin(Admin admin);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateUser(User user);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTask(Task task);
 
-    @Query("SELECT * FROM admin_table")
-    List<Admin> getAdmins();
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateAdmin(Admin admin);
 
-    @Query("SELECT * FROM task_table")
-    List<Task> getWholeTasks();
+    @Query("SELECT * FROM admin_table")
+    List<Admin> getAllAdmins();
 
     @Query("SELECT * FROM task_table")
     List<Task> getAllTasks();

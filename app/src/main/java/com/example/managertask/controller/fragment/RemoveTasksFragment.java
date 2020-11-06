@@ -19,9 +19,11 @@ import android.view.ViewGroup;
 import com.example.managertask.R;
 
 public class RemoveTasksFragment extends DialogFragment {
+
     private ItemRemoved mCallback;
 
     public RemoveTasksFragment() {
+
     }
 
     public static RemoveTasksFragment newInstance() {

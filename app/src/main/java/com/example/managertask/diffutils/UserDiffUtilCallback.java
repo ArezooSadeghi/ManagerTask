@@ -10,13 +10,13 @@ import com.example.managertask.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDiffUtilsCallbacks extends DiffUtil.Callback {
+public class UserDiffUtilCallback extends DiffUtil.Callback {
 
     public static final String USER_BUNDLE = "userBundle";
     private List<User> mOldUsers = new ArrayList<>();
     private List<User> mNewUsers = new ArrayList<>();
 
-    public UserDiffUtilsCallbacks(List<User> oldUsers, List<User> newUsers) {
+    public UserDiffUtilCallback(List<User> oldUsers, List<User> newUsers) {
         mOldUsers = oldUsers;
         mNewUsers = newUsers;
     }
@@ -33,9 +33,8 @@ public class UserDiffUtilsCallbacks extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return (
-                mOldUsers.get(oldItemPosition).getUserId().equals(
-                        mNewUsers.get(newItemPosition).getUserId()));
+        return true; /*(mOldUsers.get(oldItemPosition).getUserId().equals(
+                        mNewUsers.get(newItemPosition).getUserId()));*/
     }
 
     @Override
@@ -58,7 +57,6 @@ public class UserDiffUtilsCallbacks extends DiffUtil.Callback {
         if (!(newUser == oldUser)) {
             bundle.putSerializable(USER_BUNDLE, newUser);
         }
-
         if (bundle.size() == 0) {
             return null;
         }

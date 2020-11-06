@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;
@@ -22,17 +23,20 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TimePickerDialog extends DialogFragment {
-    public static final String EXTRA_USER_SELECTED_TIME = "user selected time";
+public class TimePickerFragment extends DialogFragment {
+
+    public static final String EXTRA_USER_SELECTED_TIME = "com.example.managertask.userselectedtime";
     public static final String ARGS_TASK_TIME = "taskTime";
+    private static final String ERROR = "error";
     private TimePicker mTimePicker;
     private Timestamp mTaskTime;
 
-    public TimePickerDialog() {
+    public TimePickerFragment() {
+
     }
 
-    public static TimePickerDialog newInstance(Timestamp taskTime) {
-        TimePickerDialog fragment = new TimePickerDialog();
+    public static TimePickerFragment newInstance(Timestamp taskTime) {
+        TimePickerFragment fragment = new TimePickerFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARGS_TASK_TIME, taskTime);
         fragment.setArguments(args);
@@ -67,6 +71,7 @@ public class TimePickerDialog extends DialogFragment {
                             Timestamp userSelectedTime = new Timestamp(date.getTime());
                             sendResult(userSelectedTime);
                         } catch (Exception e) {
+                            Log.e(ERROR, e.getMessage(), e);
                         }
                         dismiss();
                     }

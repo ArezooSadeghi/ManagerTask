@@ -24,9 +24,6 @@ import com.example.managertask.utils.DateUtils;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -34,11 +31,10 @@ import java.util.UUID;
 public class TaskDetailFragment extends DialogFragment {
 
     public static final String TASK_ID = "taskId";
-    public static final String TAG = "TAG";
-    public static final String TAG_2 = "Tag2";
+    public static final String TAG_DPF = "DPF";
+    public static final String TAG_TPF = "TPF";
     public static final int DATE_PICKER_REQUEST_CODE = 0;
     public static final int TIME_PICKER_REQUEST_CODE = 1;
-    public static final String ARGS_POSITION = "position";
     private EditText mEditTextTitle, mEditTextDescription;
     private Button mButtonDate, mButtonTime, mButtonSave, mButtonDelete, mButtonEdit;
     private ExtendedFloatingActionButton mButtonShare;
@@ -48,8 +44,8 @@ public class TaskDetailFragment extends DialogFragment {
     private DemoDatabase mDatabase;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
-    private TaskInformationCallbacks mCallbacks;
-    private TaskInformationCallbacks1 mCallbacks1;
+    private SaveDetail mSaveCallback;
+    private DeleteTask mDeleteCallback;
 
     public TaskDetailFragment() {
 
@@ -67,6 +63,7 @@ public class TaskDetailFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTaskId = (UUID) getArguments().getSerializable(TASK_ID);
+        mDatabase = DemoDatabase.getInstance(getContext());
     }
 
     @NonNull
@@ -99,7 +96,6 @@ public class TaskDetailFragment extends DialogFragment {
 
 
     public void initViews() {
-        mDatabase = DemoDatabase.getInstance(getActivity());
         List<Task> tasks = mDatabase.getDemoDao().getAllTasks();
         for (Task task : tasks) {
             if (mTaskId.equals(task.getTaskId())) {
@@ -115,10 +111,7 @@ public class TaskDetailFragment extends DialogFragment {
                     mCheckBoxDone.setEnabled(false);
                 }
                 mButtonDate.setText(DateUtils.dateFormating(mTask.getDate()));
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(mTask.getTime().getTime());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-                mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+                mButtonTime.setText(DateUtils.nowTimeStringFormating(mTask.getTime()));
             }
         }
     }
@@ -156,7 +149,7 @@ public class TaskDetailFragment extends DialogFragment {
                     mTask.setState(State.DOING);
                 }
                 mDatabase.getDemoDao().updateTask(mTask);
-                mCallbacks.saveClicked();
+                mSaveCallback.saveClicked();
                 dismiss();
             }
         });
@@ -164,19 +157,22 @@ public class TaskDetailFragment extends DialogFragment {
         mButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(mTask.getDate());
-                datePickerDialog.setTargetFragment(TaskDetailFragment.this,
+                DatePickerFragment datePickerFragment
+                        = DatePickerFragment.newInstance(mTask.getDate());
+                datePickerFragment.setTargetFragment(TaskDetailFragment.this,
                         DATE_PICKER_REQUEST_CODE);
-                datePickerDialog.show(getActivity().getSupportFragmentManager(), TAG);
+                datePickerFragment.show(getActivity().getSupportFragmentManager(), TAG_DPF);
             }
         });
+
         mButtonTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(mTask.getTime());
-                timePickerDialog.setTargetFragment(TaskDetailFragment.this,
+                TimePickerFragment timePickerFragment
+                        = TimePickerFragment.newInstance(mTask.getTime());
+                timePickerFragment.setTargetFragment(TaskDetailFragment.this,
                         TIME_PICKER_REQUEST_CODE);
-                timePickerDialog.show(getActivity().getSupportFragmentManager(), TAG_2);
+                timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG_TPF);
             }
         });
 
@@ -184,7 +180,7 @@ public class TaskDetailFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mDatabase.getDemoDao().deleteTask(mTask);
-                mCallbacks1.deleteClicked();
+                mDeleteCallback.deleteClicked();
                 dismiss();
             }
         });
@@ -222,39 +218,33 @@ public class TaskDetailFragment extends DialogFragment {
             return;
         }
         if (requestCode == DATE_PICKER_REQUEST_CODE) {
-            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerDialog
+            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerFragment
                     .EXTRA_USER_SELECTED_DATE);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            mButtonDate.setText(dateFormat.format(mUserSelectedDate));
+            mButtonDate.setText(DateUtils.dateFormating(mUserSelectedDate));
         }
-
         if (requestCode == TIME_PICKER_REQUEST_CODE) {
-            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerDialog
+            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerFragment
                     .EXTRA_USER_SELECTED_TIME);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(mUserSelectedTime.getTime());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-            mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
+            mButtonTime.setText(DateUtils.nowTimeStringFormating(mUserSelectedTime));
         }
     }
 
-    public interface TaskInformationCallbacks {
+    public interface SaveDetail {
         void saveClicked();
     }
 
-    public interface TaskInformationCallbacks1 {
+    public interface DeleteTask {
         void deleteClicked();
-
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof TaskInformationCallbacks) {
-            mCallbacks = (TaskInformationCallbacks) context;
+        if (context instanceof SaveDetail) {
+            mSaveCallback = (SaveDetail) context;
         }
-        if (context instanceof TaskInformationCallbacks1) {
-            mCallbacks1 = (TaskInformationCallbacks1) context;
+        if (context instanceof DeleteTask) {
+            mDeleteCallback = (DeleteTask) context;
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.managertask.controller.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class AdminLoginPageFragment extends Fragment {
         View view = inflater.inflate(
                 R.layout.fragment_admin_login_page, container, false);
         findViews(view);
+        initViews();
         setListeners();
         return view;
     }
@@ -57,14 +59,18 @@ public class AdminLoginPageFragment extends Fragment {
         mTextPassword = view.findViewById(R.id.txt_admin_password);
     }
 
+    private void initViews() {
+        mTextPassword.setTransformationMethod(new PasswordTransformationMethod());
+    }
+
     private void setListeners() {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Admin> adminList = mDatabase.getDemoDao().getAdmins();
-                for (Admin admin:adminList) {
+                List<Admin> adminList = mDatabase.getDemoDao().getAllAdmins();
+                for (Admin admin : adminList) {
                     if (admin.getUsername().equals(mTextUsername.getText().toString()) &&
-                    admin.getPassword().equals(mTextPassword.getText().toString())) {
+                            admin.getPassword().equals(mTextPassword.getText().toString())) {
                         Intent intent = UserTaskListActivity.newIntent(getContext());
                         startActivity(intent);
                     } else {

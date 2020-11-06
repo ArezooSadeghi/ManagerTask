@@ -2,7 +2,6 @@ package com.example.managertask.controller.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,20 @@ import com.example.managertask.model.User;
 
 import java.util.List;
 
-public class SignupPage extends Fragment {
+public class SignupPageFragment extends Fragment {
+
     private Button mButtonSignup, mButtonBack;
     private EditText mEditTextUsername, mEditTextPassword;
     private DemoDatabase mDatabase;
-    private SignupCallbacks mCallbacks;
+    private BackClicked mCallbacks;
     private User mUser;
 
-    public SignupPage() {
+    public SignupPageFragment() {
+
     }
 
-    public static SignupPage newInstance() {
-        SignupPage fragment = new SignupPage();
+    public static SignupPageFragment newInstance() {
+        SignupPageFragment fragment = new SignupPageFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -39,7 +40,7 @@ public class SignupPage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().getIntent();
+        mDatabase = DemoDatabase.getInstance(getContext());
     }
 
     @Override
@@ -48,11 +49,9 @@ public class SignupPage extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_signup_page, container, false);
         findViews(view);
-        initViews();
         setListeners();
         return view;
     }
-
 
     private void findViews(View view) {
         mButtonSignup = view.findViewById(R.id.btn_signup);
@@ -61,17 +60,10 @@ public class SignupPage extends Fragment {
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
 
-
-    private void initViews() {
-        mEditTextPassword.setTransformationMethod(new PasswordTransformationMethod());
-    }
-
-
     private void setListeners() {
         mButtonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase = DemoDatabase.getInstance(getActivity());
                 List<User> users = mDatabase.getDemoDao().getAllUsers();
                 if (mEditTextUsername.getText().toString().equals("") || mEditTextPassword.getText()
                         .toString().equals("")) {
@@ -117,15 +109,15 @@ public class SignupPage extends Fragment {
                 Toast.LENGTH_SHORT).show();
     }
 
-    public interface SignupCallbacks {
+    public interface BackClicked {
         void backClicked();
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof SignupCallbacks) {
-            mCallbacks = (SignupCallbacks) context;
+        if (context instanceof BackClicked) {
+            mCallbacks = (BackClicked) context;
         }
     }
 }

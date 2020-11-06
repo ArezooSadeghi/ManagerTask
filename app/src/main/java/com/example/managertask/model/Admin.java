@@ -10,16 +10,16 @@ import java.util.UUID;
 @Entity(tableName = "admin_table")
 public class Admin {
 
+    @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    private UUID mAdminId;
+
     @ColumnInfo(name = "username")
     private String mUsername;
 
     @ColumnInfo(name = "password")
     private String mPassword;
-
-    @NonNull
-    @PrimaryKey
-    @ColumnInfo(name = "id")
-    private UUID mAdminId;
 
     public Admin() {
         mAdminId = UUID.randomUUID();
@@ -31,20 +31,16 @@ public class Admin {
         mAdminId = UUID.randomUUID();
     }
 
-    public String getUsername() {
-        return mUsername;
-    }
-
     public void setUsername(String username) {
         mUsername = username;
     }
 
-    public String getPassword() {
-        return mPassword;
-    }
-
     public void setPassword(String password) {
         mPassword = password;
+    }
+
+    public void setAdminId(@NonNull UUID adminId) {
+        mAdminId = adminId;
     }
 
     @NonNull
@@ -52,7 +48,11 @@ public class Admin {
         return mAdminId;
     }
 
-    public void setAdminId(@NonNull UUID adminId) {
-        mAdminId = adminId;
+    public String getUsername() {
+        return mUsername;
+    }
+
+    public String getPassword() {
+        return mPassword;
     }
 }

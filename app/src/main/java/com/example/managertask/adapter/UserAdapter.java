@@ -2,7 +2,6 @@ package com.example.managertask.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.managertask.R;
 import com.example.managertask.database.DemoDatabase;
-import com.example.managertask.diffutils.UserDiffUtilsCallbacks;
+import com.example.managertask.diffutils.UserDiffUtilCallback;
 import com.example.managertask.model.User;
 import com.example.managertask.utils.DateUtils;
 
@@ -62,7 +61,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         } else {
             Bundle bundle = (Bundle) payloads.get(0);
             for (String key : bundle.keySet()) {
-                holder.bindUser((User) bundle.getSerializable(UserDiffUtilsCallbacks.USER_BUNDLE));
+                holder.bindUser((User) bundle.getSerializable(UserDiffUtilCallback.USER_BUNDLE));
             }
         }
     }
@@ -75,7 +74,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
     public void updateUsers(List<User> newUsers) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
-                new UserDiffUtilsCallbacks(mUsers, newUsers));
+                new UserDiffUtilCallback(mUsers, newUsers));
         diffResult.dispatchUpdatesTo(this);
         mUsers.clear();
         mUsers.addAll(newUsers);
@@ -86,7 +85,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
     }
 
     public class UserHolder extends RecyclerView.ViewHolder {
-        private TextView mTextViewDate, mTextViewNumber;
+        private TextView mTextViewDate, mTextViewNumberOfTask;
         private ImageButton mButtonRemove;
         private User mUser;
         private DemoDatabase mDatabase = DemoDatabase.getInstance(mContext);
@@ -110,12 +109,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
             int numberOfTask = mDatabase
                     .getDemoDao()
                     .getAllTasksForEveryUser(user.getUserId()).size();
-            mTextViewNumber.setText("" + numberOfTask);
+            mTextViewNumberOfTask.setText("" + numberOfTask);
         }
 
         private void findViews(@NonNull View itemView) {
             mTextViewDate = itemView.findViewById(R.id.txt_date_task_user_item);
-            mTextViewNumber = itemView.findViewById(R.id.txt_number_task_user_item);
+            mTextViewNumberOfTask = itemView.findViewById(R.id.txt_number_task_user_item);
             mButtonRemove = itemView.findViewById(R.id.btn_remove);
         }
     }

@@ -17,6 +17,7 @@ import com.example.managertask.model.Task;
 import java.util.List;
 
 public class UserTaskListFragment extends Fragment {
+
     private RecyclerView mRecyclerViewUserTaskList;
     private TaskAdapter mAdapter;
     private DemoDatabase mDatabase;
@@ -59,7 +60,7 @@ public class UserTaskListFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        List<Task> tasks = mDatabase.getDemoDao().getWholeTasks();
+        List<Task> tasks = mDatabase.getDemoDao().getAllTasks();
         if (mAdapter == null) {
             mAdapter = new TaskAdapter(tasks, this);
             mRecyclerViewUserTaskList.setAdapter(mAdapter);
@@ -69,14 +70,14 @@ public class UserTaskListFragment extends Fragment {
     }
 
     public void updateRecyclerview() {
-        mAdapter.updateTasks(mDatabase.getDemoDao().getWholeTasks());
+        mAdapter.updateTasks(mDatabase.getDemoDao().getAllTasks());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (mAdapter != null) {
-            mAdapter.updateTasks(mDatabase.getDemoDao().getWholeTasks());
+            mAdapter.updateTasks(mDatabase.getDemoDao().getAllTasks());
         }
     }
 }

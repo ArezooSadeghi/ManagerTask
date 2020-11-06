@@ -8,9 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class TodoFragment extends Fragment {
+
     private static final String ARGS_USER_ID = "userId";
     private LinearLayout mLayoutEmptyRecyclerview;
     private RecyclerView mRecyclerViewTodo;
@@ -32,6 +33,7 @@ public class TodoFragment extends Fragment {
     private UUID mUserId;
 
     public TodoFragment() {
+
     }
 
 
@@ -49,6 +51,7 @@ public class TodoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
+        mDatabase = DemoDatabase.getInstance(getContext());
     }
 
 
@@ -71,7 +74,6 @@ public class TodoFragment extends Fragment {
 
     private void initViews() {
         mRecyclerViewTodo.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mDatabase = DemoDatabase.getInstance(getActivity());
         List<Task> todoTasks = mDatabase.getDemoDao().getAllTasksForEveryUser(mUserId);
         if (todoTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);

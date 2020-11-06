@@ -21,20 +21,22 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import java.util.List;
 import java.util.UUID;
 
-public class LoginPage extends Fragment {
+public class LoginPageFragment extends Fragment {
+
     private ExtendedFloatingActionButton mButtonLoginAdmin;
     private Button mButtonSignup, mButtonLogin;
     private EditText mEditTextUsename, mEditTextPassword;
     private DemoDatabase mDatabase;
-    private LoginCallbacks mCallbacks;
-    private LoginCallbacksTaskPager mCallbacksTaskPager;
-    private LoginAdminCallback mAdminCallback;
+    private UserSignup mCallbacks;
+    private UserLogin mCallbacksTaskPager;
+    private AdminLogin mAdminCallback;
 
-    public LoginPage() {
+    public LoginPageFragment() {
+
     }
 
-    public static LoginPage newInstance() {
-        LoginPage fragment = new LoginPage();
+    public static LoginPageFragment newInstance() {
+        LoginPageFragment fragment = new LoginPageFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -43,6 +45,7 @@ public class LoginPage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDatabase = DemoDatabase.getInstance(getContext());
     }
 
     @Override
@@ -64,11 +67,9 @@ public class LoginPage extends Fragment {
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
 
-
     private void initViews() {
         mEditTextPassword.setTransformationMethod(new PasswordTransformationMethod());
     }
-
 
     private void setListeners() {
         mButtonSignup.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +82,6 @@ public class LoginPage extends Fragment {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase = DemoDatabase.getInstance(getActivity());
                 List<User> users = mDatabase.getDemoDao().getAllUsers();
                 if (mEditTextUsename.getText().toString().equals("")
                         || mEditTextPassword.getText().toString().equals("")) {
@@ -117,29 +117,29 @@ public class LoginPage extends Fragment {
         });
     }
 
-    public interface LoginCallbacks {
+    public interface UserSignup {
         void signupClicked();
     }
 
-    public interface LoginCallbacksTaskPager {
+    public interface UserLogin {
         void loginClicked(UUID userId);
     }
 
-    public interface LoginAdminCallback {
+    public interface AdminLogin {
         void AdminLoginClicked();
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof LoginCallbacks) {
-            mCallbacks = (LoginCallbacks) context;
+        if (context instanceof UserSignup) {
+            mCallbacks = (UserSignup) context;
         }
-        if (context instanceof LoginCallbacksTaskPager) {
-            mCallbacksTaskPager = (LoginCallbacksTaskPager) context;
+        if (context instanceof UserLogin) {
+            mCallbacksTaskPager = (UserLogin) context;
         }
-        if (context instanceof LoginAdminCallback) {
-            mAdminCallback = (LoginAdminCallback) context;
+        if (context instanceof AdminLogin) {
+            mAdminCallback = (AdminLogin) context;
         }
     }
 }

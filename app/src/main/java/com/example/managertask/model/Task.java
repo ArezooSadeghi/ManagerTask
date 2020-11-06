@@ -44,18 +44,15 @@ public class Task implements Comparable, Serializable {
     }
 
     public Task(String title, String description, Date date, Timestamp time, State state,
-                UUID userTaskId) {
+                UUID userTaskId, String pathPhoto) {
         mTitle = title;
         mDescription = description;
         mDate = date;
         mTime = time;
         mState = state;
         mUserTaskId = userTaskId;
+        mPathPhoto = pathPhoto;
         mTaskId = UUID.randomUUID();
-    }
-
-    public void setTaskId(UUID taskId) {
-        mTaskId = taskId;
     }
 
     public void setPathPhoto(String pathPhoto) {
@@ -82,10 +79,15 @@ public class Task implements Comparable, Serializable {
         mState = state;
     }
 
+    public void setTaskId(@NonNull UUID taskId) {
+        mTaskId = taskId;
+    }
+
     public void setUserTaskId(UUID userTaskId) {
         mUserTaskId = userTaskId;
     }
 
+    @NonNull
     public UUID getTaskId() {
         return mTaskId;
     }
@@ -122,8 +124,9 @@ public class Task implements Comparable, Serializable {
     public int compareTo(Object o) {
         Task task = (Task) o;
         if (task.getTitle().equals(this.mTitle) && (task.getDescription().equals(this.mDescription))
-               && (task.getDate().equals(this.mDate)) && (task.getTime().equals(this.mTime)) &&
-                (task.getState().equals(this.mState))) {
+                && (task.getDate().equals(this.mDate)) && (task.getTime().equals(this.mTime)) &&
+                (task.getState().equals(this.mState)) &&
+                (task.getPathPhoto().equals(this.mPathPhoto))) {
             return 0;
         } else {
             return 1;

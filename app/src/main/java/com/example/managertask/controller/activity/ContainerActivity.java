@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
 import com.example.managertask.controller.fragment.AdminLoginPageFragment;
-import com.example.managertask.controller.fragment.LoginPage;
-import com.example.managertask.controller.fragment.SignupPage;
+import com.example.managertask.controller.fragment.LoginPageFragment;
+import com.example.managertask.controller.fragment.SignupPageFragment;
 
 import java.util.UUID;
 
-public class ContainerActivity extends AppCompatActivity implements LoginPage.LoginCallbacks,
-        SignupPage.SignupCallbacks, LoginPage.LoginCallbacksTaskPager, LoginPage.LoginAdminCallback {
+public class ContainerActivity extends AppCompatActivity implements LoginPageFragment.UserSignup,
+        SignupPageFragment.BackClicked, LoginPageFragment.UserLogin, LoginPageFragment.AdminLogin {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class ContainerActivity extends AppCompatActivity implements LoginPage.Lo
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, LoginPage.newInstance())
+                    .add(R.id.fragment_container, LoginPageFragment.newInstance())
                     .commit();
         }
     }
@@ -33,14 +33,14 @@ public class ContainerActivity extends AppCompatActivity implements LoginPage.Lo
     @Override
     public void signupClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, SignupPage.newInstance())
+                .replace(R.id.fragment_container, SignupPageFragment.newInstance())
                 .commit();
     }
 
     @Override
     public void backClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, LoginPage.newInstance())
+                .replace(R.id.fragment_container, LoginPageFragment.newInstance())
                 .commit();
     }
 

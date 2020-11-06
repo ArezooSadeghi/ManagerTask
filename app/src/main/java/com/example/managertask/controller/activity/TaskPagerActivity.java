@@ -17,7 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.managertask.R;
 import com.example.managertask.controller.fragment.DoingFragment;
 import com.example.managertask.controller.fragment.DoneFragment;
-import com.example.managertask.controller.fragment.NewTaskDialog;
+import com.example.managertask.controller.fragment.NewTaskFragment;
 import com.example.managertask.controller.fragment.RemoveTasksFragment;
 import com.example.managertask.controller.fragment.TaskDetailFragment;
 import com.example.managertask.controller.fragment.TodoFragment;
@@ -27,8 +27,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.UUID;
 
-public class TaskPagerActivity extends AppCompatActivity implements NewTaskDialog.Callbacks,
-        TaskDetailFragment.TaskInformationCallbacks, TaskDetailFragment.TaskInformationCallbacks1,
+public class TaskPagerActivity extends AppCompatActivity implements NewTaskFragment.Callbacks,
+        TaskDetailFragment.SaveDetail, TaskDetailFragment.DeleteTask,
 RemoveTasksFragment.ItemRemoved{
     private static final String EXTRA_USER_ID = "com.example.managertask.userId";
     private static final String TAG = "TPA";
@@ -64,7 +64,7 @@ RemoveTasksFragment.ItemRemoved{
         mFabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewTaskDialog dialogAddNewTaskFragment = NewTaskDialog.newInstance(mUserId);
+                NewTaskFragment dialogAddNewTaskFragment = NewTaskFragment.newInstance(mUserId);
                 dialogAddNewTaskFragment.show(getSupportFragmentManager(), TAG);
             }
         });

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class DoingFragment extends Fragment {
+
     private static final String ARGS_USER_ID = "userId";
     private LinearLayout mLayoutEmptyRecyclerview;
     private RecyclerView mRecyclerViewDoing;
@@ -33,6 +34,7 @@ public class DoingFragment extends Fragment {
     private UUID mUserId;
 
     public DoingFragment() {
+
     }
 
 
@@ -50,6 +52,7 @@ public class DoingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
+        mDatabase = DemoDatabase.getInstance(getContext());
     }
 
 
@@ -72,7 +75,6 @@ public class DoingFragment extends Fragment {
 
     private void initViews() {
         mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mDatabase = DemoDatabase.getInstance(getActivity());
         List<Task> doingTasks = mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId);
         if (doingTasks.size() == 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
