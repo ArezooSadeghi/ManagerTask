@@ -26,16 +26,13 @@ import java.util.UUID;
 
 public class DoingFragment extends Fragment {
 
-    private static final String ARGS_USER_ID = "userId";
     private LinearLayout mLayoutEmptyRecyclerview;
     private RecyclerView mRecyclerViewDoing;
     private DemoDatabase mDatabase;
     private TaskAdapter mDoingAdapter;
     private UUID mUserId;
 
-    public DoingFragment() {
-
-    }
+    private static final String ARGS_USER_ID = "userId";
 
 
     public static DoingFragment newInstance(UUID userId) {
@@ -50,7 +47,9 @@ public class DoingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
+
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
         mDatabase = DemoDatabase.getInstance(getContext());
     }
@@ -61,30 +60,11 @@ public class DoingFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_doing, container, false);
+
         findViews(view);
         initViews();
+        setupAdapter();
         return view;
-    }
-
-
-    private void findViews(View view) {
-        mRecyclerViewDoing = view.findViewById(R.id.doing_recyclerview);
-        mLayoutEmptyRecyclerview = view.findViewById(R.id.layout_empty_recyclerview);
-    }
-
-
-    private void initViews() {
-        mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
-        List<Task> doingTasks = mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId);
-        if (doingTasks.size() == 0) {
-            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
-        }
-        if (mDoingAdapter == null) {
-            mDoingAdapter = new TaskAdapter(doingTasks, this);
-            mRecyclerViewDoing.setAdapter(mDoingAdapter);
-        } else {
-            updateRecyclerview();
-        }
     }
 
 
@@ -92,7 +72,7 @@ public class DoingFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         MenuItem item = menu.findItem(R.id.item_search);
         SearchView searchView = (SearchView) item.getActionView();
-        searchView.setQueryHint("Search...");
+        searchView.setQueryHint(getString(R.string.search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -111,6 +91,31 @@ public class DoingFragment extends Fragment {
     }
 
 
+    private void findViews(View view) {
+        mRecyclerViewDoing = view.findViewById(R.id.recycler_view_doing);
+        mLayoutEmptyRecyclerview = view.findViewById(R.id.layout_empty_recyclerview);
+    }
+
+
+    private void initViews() {
+        mRecyclerViewDoing.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+
+    private void setupAdapter() {
+        List<Task> doingTasks = mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId);
+        if (doingTasks.size() == 0) {
+            mLayoutEmptyRecyclerview.setVisibility(View.VISIBLE);
+        }
+        if (mDoingAdapter == null) {
+            mDoingAdapter = new TaskAdapter(doingTasks, this);
+            mRecyclerViewDoing.setAdapter(mDoingAdapter);
+        } else {
+            updateRecyclerview();
+        }
+    }
+
+
     public void updateRecyclerview() {
         if (mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId).size() > 0) {
             mLayoutEmptyRecyclerview.setVisibility(View.GONE);
@@ -121,7 +126,8 @@ public class DoingFragment extends Fragment {
         mDoingAdapter.updateTasks(mDatabase.getDemoDao().getAllTaksByState(State.DOING, mUserId));
     }
 
-    public void allRemoved() {
+
+    public void removeAllTasks() {
         mDatabase.getDemoDao().deleteAllTasksForUser(mUserId);
         updateRecyclerview();
     }

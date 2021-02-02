@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
-import com.example.managertask.controller.activity.UserTaskListActivity;
+import com.example.managertask.controller.activity.UserDetailCallbackListActivity;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.Admin;
 
@@ -32,11 +32,14 @@ public class AdminLoginFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mDatabase = DemoDatabase.getInstance(getContext());
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,11 +54,13 @@ public class AdminLoginFragment extends Fragment {
         return view;
     }
 
+
     private void findViews(View view) {
         mButtonLogin = view.findViewById(R.id.btn_login_admin);
         mTextUsername = view.findViewById(R.id.txt_admin_username);
         mTextPassword = view.findViewById(R.id.txt_admin_password);
     }
+
 
     private void setListeners() {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +70,7 @@ public class AdminLoginFragment extends Fragment {
                 for (Admin admin : adminList) {
                     if (admin.getUsername().equals(mTextUsername.getText().toString()) &&
                             admin.getPassword().equals(mTextPassword.getText().toString())) {
-                        Intent intent = UserTaskListActivity.newIntent(getContext());
+                        Intent intent = UserDetailCallbackListActivity.newIntent(getContext());
                         startActivity(intent);
                     } else {
                         Toast.makeText(

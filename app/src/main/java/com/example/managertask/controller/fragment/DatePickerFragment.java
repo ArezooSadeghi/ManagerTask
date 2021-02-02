@@ -23,14 +23,12 @@ import java.util.GregorianCalendar;
 
 public class DatePickerFragment extends DialogFragment {
 
-    public static final String ARGS_TASK_DATE = "taskDate";
-    public static final String EXTRA_USER_SELECTED_DATE = "com.example.managertask.userselecteddate";
     private DatePicker mDatePicker;
     private Date mTaskDate;
 
-    public DatePickerFragment() {
+    private static final String ARGS_TASK_DATE = "taskDate";
+    public static final String EXTRA_USER_SELECTED_DATE = "com.example.managertask.userselecteddate";
 
-    }
 
     public static DatePickerFragment newInstance(Date taskDate) {
         DatePickerFragment fragment = new DatePickerFragment();
@@ -40,20 +38,26 @@ public class DatePickerFragment extends DialogFragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mTaskDate = (Date) getArguments().getSerializable(ARGS_TASK_DATE);
     }
+
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.fragment_date_picker, null);
+        View view = LayoutInflater.from(getContext()).inflate(
+                R.layout.fragment_date_picker,
+                null);
+
         findViews(view);
         initDatePicker();
-        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setView(view)
+
+        AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -62,14 +66,18 @@ public class DatePickerFragment extends DialogFragment {
                         dismiss();
                     }
                 })
+
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
+
         return dialog;
     }
 
+
     private void findViews(View view) {
-        mDatePicker = view.findViewById(R.id.datepicker);
+        mDatePicker = view.findViewById(R.id.date_picker);
     }
+
 
     public void initDatePicker() {
         Calendar calendar = Calendar.getInstance();
@@ -80,6 +88,7 @@ public class DatePickerFragment extends DialogFragment {
         mDatePicker.init(year, monthOfYear, dayOfMonth, null);
     }
 
+
     private Date extractDateFromDatePicker() {
         int year = mDatePicker.getYear();
         int month = mDatePicker.getMonth();
@@ -87,6 +96,7 @@ public class DatePickerFragment extends DialogFragment {
         GregorianCalendar calendar = new GregorianCalendar(year, month, dayOfMonth);
         return calendar.getTime();
     }
+
 
     public void sendResult(Date userSelectedDate) {
         Fragment fragment = getTargetFragment();

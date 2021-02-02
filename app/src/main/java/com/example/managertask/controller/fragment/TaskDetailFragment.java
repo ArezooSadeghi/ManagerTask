@@ -21,7 +21,6 @@ import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.State;
 import com.example.managertask.model.Task;
 import com.example.managertask.utils.DateUtils;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -30,41 +29,42 @@ import java.util.UUID;
 
 public class TaskDetailFragment extends DialogFragment {
 
-    public static final String TASK_ID = "taskId";
-    public static final String TAG_DPF = "DPF";
-    public static final String TAG_TPF = "TPF";
-    public static final int DATE_PICKER_REQUEST_CODE = 0;
-    public static final int TIME_PICKER_REQUEST_CODE = 1;
+
     private EditText mEditTextTitle, mEditTextDescription;
-    private Button mButtonDate, mButtonTime, mButtonSave, mButtonDelete, mButtonEdit;
-    private ExtendedFloatingActionButton mButtonShare;
+    private Button mButtonDate, mButtonTime, mButtonSave, mButtonDelete, mButtonShare;
     private CheckBox mCheckBoxDone;
     private UUID mTaskId;
     private Task mTask;
     private DemoDatabase mDatabase;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
-    private SaveDetail mSaveCallback;
-    private DeleteTask mDeleteCallback;
+    private SaveDetailCallback mSaveDetailCallback;
+    private DeleteDetailCallback mDeleteDetailCallback;
 
-    public TaskDetailFragment() {
+    private static final int DATE_PICKER_REQUEST_CODE = 0;
+    private static final int TIME_PICKER_REQUEST_CODE = 1;
 
-    }
+    private static final String ARGS_TASK_ID = "taskId";
+    private static final String TAG = TaskDetailFragment.class.getSimpleName();
+
 
     public static TaskDetailFragment newInstance(UUID taskId) {
         TaskDetailFragment fragment = new TaskDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TASK_ID, taskId);
+        args.putSerializable(ARGS_TASK_ID, taskId);
         fragment.setArguments(args);
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskId = (UUID) getArguments().getSerializable(TASK_ID);
+
+        mTaskId = (UUID) getArguments().getSerializable(ARGS_TASK_ID);
         mDatabase = DemoDatabase.getInstance(getContext());
     }
+
 
     @NonNull
     @Override
@@ -75,23 +75,50 @@ public class TaskDetailFragment extends DialogFragment {
         findViews(view);
         initViews();
         setListeners();
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setView(view)
-                .create();
-        return dialog;
+
+        return new AlertDialog.Builder(getActivity()).setView(view).create();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        }
+        if (requestCode == DATE_PICKER_REQUEST_CODE) {
+            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerFragment
+                    .EXTRA_USER_SELECTED_DATE);
+            mButtonDate.setText(DateUtils.dateFormating(mUserSelectedDate));
+        }
+        if (requestCode == TIME_PICKER_REQUEST_CODE) {
+            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerFragment
+                    .EXTRA_USER_SELECTED_TIME);
+            mButtonTime.setText(DateUtils.nowTimeStringFormating(mUserSelectedTime));
+        }
+    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof SaveDetailCallback) {
+            mSaveDetailCallback = (SaveDetailCallback) context;
+        }
+        if (context instanceof DeleteDetailCallback) {
+            mDeleteDetailCallback = (DeleteDetailCallback) context;
+        }
     }
 
 
     private void findViews(View view) {
-        mEditTextTitle = view.findViewById(R.id.title_task_information);
-        mEditTextDescription = view.findViewById(R.id.description_task_information);
-        mButtonDate = view.findViewById(R.id.date_task_information);
-        mButtonTime = view.findViewById(R.id.time_task_information);
-        mButtonSave = view.findViewById(R.id.save_task_information);
-        mButtonDelete = view.findViewById(R.id.delete_task_information);
-        mButtonEdit = view.findViewById(R.id.edit_task_information);
-        mButtonShare = view.findViewById(R.id.fab_share);
-        mCheckBoxDone = view.findViewById(R.id.state_task_information);
+        mEditTextTitle = view.findViewById(R.id.edit_text_title);
+        mEditTextDescription = view.findViewById(R.id.edit_text_description);
+        mButtonDate = view.findViewById(R.id.btn_date);
+        mButtonTime = view.findViewById(R.id.btn_time);
+        mButtonSave = view.findViewById(R.id.btn_save);
+        mButtonDelete = view.findViewById(R.id.btn_delete);
+        mButtonShare = view.findViewById(R.id.btn_share);
+        mCheckBoxDone = view.findViewById(R.id.checkbox_done);
     }
 
 
@@ -101,14 +128,9 @@ public class TaskDetailFragment extends DialogFragment {
             if (mTaskId.equals(task.getTaskId())) {
                 mTask = task;
                 mEditTextTitle.setText(mTask.getTitle());
-                mEditTextTitle.setFocusable(false);
                 mEditTextDescription.setText(mTask.getDescription());
-                mEditTextDescription.setFocusable(false);
-                mButtonDate.setEnabled(false);
-                mButtonTime.setEnabled(false);
                 if (mTask.getState().equals(State.DONE)) {
                     mCheckBoxDone.setChecked(true);
-                    mCheckBoxDone.setEnabled(false);
                 }
                 mButtonDate.setText(DateUtils.dateFormating(mTask.getDate()));
                 mButtonTime.setText(DateUtils.nowTimeStringFormating(mTask.getTime()));
@@ -116,18 +138,8 @@ public class TaskDetailFragment extends DialogFragment {
         }
     }
 
-    private void setListeners() {
-        mButtonEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mEditTextTitle.setFocusableInTouchMode(true);
-                mEditTextDescription.setFocusableInTouchMode(true);
-                mButtonDate.setEnabled(true);
-                mButtonTime.setEnabled(true);
-                mCheckBoxDone.setEnabled(true);
-            }
-        });
 
+    private void setListeners() {
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,7 +161,7 @@ public class TaskDetailFragment extends DialogFragment {
                     mTask.setState(State.DOING);
                 }
                 mDatabase.getDemoDao().updateTask(mTask);
-                mSaveCallback.saveClicked();
+                mSaveDetailCallback.saveClicked();
                 dismiss();
             }
         });
@@ -161,7 +173,7 @@ public class TaskDetailFragment extends DialogFragment {
                         = DatePickerFragment.newInstance(mTask.getDate());
                 datePickerFragment.setTargetFragment(TaskDetailFragment.this,
                         DATE_PICKER_REQUEST_CODE);
-                datePickerFragment.show(getActivity().getSupportFragmentManager(), TAG_DPF);
+                datePickerFragment.show(getActivity().getSupportFragmentManager(), TAG);
             }
         });
 
@@ -172,7 +184,7 @@ public class TaskDetailFragment extends DialogFragment {
                         = TimePickerFragment.newInstance(mTask.getTime());
                 timePickerFragment.setTargetFragment(TaskDetailFragment.this,
                         TIME_PICKER_REQUEST_CODE);
-                timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG_TPF);
+                timePickerFragment.show(getActivity().getSupportFragmentManager(), TAG);
             }
         });
 
@@ -180,7 +192,7 @@ public class TaskDetailFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mDatabase.getDemoDao().deleteTask(mTask);
-                mDeleteCallback.deleteClicked();
+                mDeleteDetailCallback.deleteClicked();
                 dismiss();
             }
         });
@@ -198,6 +210,7 @@ public class TaskDetailFragment extends DialogFragment {
         });
     }
 
+
     private String getReport() {
         String title = mTask.getTitle();
         String description = mTask.getDescription();
@@ -212,39 +225,13 @@ public class TaskDetailFragment extends DialogFragment {
         );
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode != Activity.RESULT_OK || data == null) {
-            return;
-        }
-        if (requestCode == DATE_PICKER_REQUEST_CODE) {
-            mUserSelectedDate = (Date) data.getSerializableExtra(DatePickerFragment
-                    .EXTRA_USER_SELECTED_DATE);
-            mButtonDate.setText(DateUtils.dateFormating(mUserSelectedDate));
-        }
-        if (requestCode == TIME_PICKER_REQUEST_CODE) {
-            mUserSelectedTime = (Timestamp) data.getSerializableExtra(TimePickerFragment
-                    .EXTRA_USER_SELECTED_TIME);
-            mButtonTime.setText(DateUtils.nowTimeStringFormating(mUserSelectedTime));
-        }
-    }
 
-    public interface SaveDetail {
+    public interface SaveDetailCallback {
         void saveClicked();
     }
 
-    public interface DeleteTask {
-        void deleteClicked();
-    }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof SaveDetail) {
-            mSaveCallback = (SaveDetail) context;
-        }
-        if (context instanceof DeleteTask) {
-            mDeleteCallback = (DeleteTask) context;
-        }
+    public interface DeleteDetailCallback {
+        void deleteClicked();
     }
 }

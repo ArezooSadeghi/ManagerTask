@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".controller.fragment.DoneFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/done_recyclerview"
-        android:layout_width="wrap_content"
+        android:id="@+id/recycler_view_done"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <LinearLayout
@@ -16,7 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="150dp"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -29,12 +27,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_gravity="center"
             android:text="@string/empty_recyclerview"
             android:textSize="18sp" />
 
     </LinearLayout>
 
-
-
-</LinearLayout>
+</FrameLayout>

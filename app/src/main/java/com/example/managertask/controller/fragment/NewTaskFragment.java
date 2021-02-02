@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,16 +39,15 @@ import java.util.UUID;
 
 public class NewTaskFragment extends DialogFragment {
 
-    private Button mButtonSave, mButtonDate, mButtonTime;
+    private Button mButtonSave, mButtonCancel, mButtonDate, mButtonTime, mButtonTakePhoto;
     private EditText mEditTextTitle, mEditTextDescription;
     private CheckBox mCheckBoxDone;
-    private ImageButton mButtonPhoto;
     private DemoDatabase mDatabase;
     private File mPhotoFile;
     private String mNameOfFile;
     private Task mTask;
     private UUID mUserId;
-    private OkClickedCallback mOkClickedCallback;
+    private SaveClickedCallback mSaveClickedCallback;
     private Date mUserSelectedDate;
     private Timestamp mUserSelectedTime;
 
@@ -58,8 +56,8 @@ public class NewTaskFragment extends DialogFragment {
     public static final int REQUEST_CODE_IMAGE_CAPTURE = 2;
 
     private static final String ARGS_USER_ID = "userId";
-    private static final String TAG = NewTaskFragment.class.getSimpleName();
     private static final String AUTHORITY = "com.example.managertask.fileProvider";
+    private static final String TAG = NewTaskFragment.class.getSimpleName();
 
 
     public static NewTaskFragment newInstance(UUID userId) {
@@ -70,13 +68,16 @@ public class NewTaskFragment extends DialogFragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mUserId = (UUID) getArguments().getSerializable(ARGS_USER_ID);
         mDatabase = DemoDatabase.getInstance(getContext());
         mPhotoFile = mDatabase.getPhotoFile(getContext());
     }
+
 
     @NonNull
     @Override
@@ -87,17 +88,19 @@ public class NewTaskFragment extends DialogFragment {
         findViews(view);
         initViews();
         setListeners();
-        AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).create();
-        return dialog;
+
+        return new AlertDialog.Builder(getContext()).setView(view).create();
     }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof OkClickedCallback) {
-            mOkClickedCallback = (OkClickedCallback) context;
+        if (context instanceof SaveClickedCallback) {
+            mSaveClickedCallback = (SaveClickedCallback) context;
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -124,15 +127,18 @@ public class NewTaskFragment extends DialogFragment {
         }
     }
 
+
     private void findViews(View view) {
         mButtonSave = view.findViewById(R.id.btn_save);
         mButtonDate = view.findViewById(R.id.btn_date);
         mButtonTime = view.findViewById(R.id.btn_time);
-        mButtonPhoto = view.findViewById(R.id.img_take_photo);
+        mButtonTakePhoto = view.findViewById(R.id.btn_take_photo);
+        mButtonCancel = view.findViewById(R.id.btn_cancel);
         mCheckBoxDone = view.findViewById(R.id.checkbox_done);
-        mEditTextTitle = view.findViewById(R.id.edittext_title);
-        mEditTextDescription = view.findViewById(R.id.edittext_description);
+        mEditTextTitle = view.findViewById(R.id.edit_text_title);
+        mEditTextDescription = view.findViewById(R.id.edit_text_description);
     }
+
 
     private void initViews() {
         mButtonDate.setText(DateUtils.dateFormating(new Date()));
@@ -141,12 +147,12 @@ public class NewTaskFragment extends DialogFragment {
         mButtonTime.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
+
     private void setListeners() {
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTask = new Task();
-
                 mTask.setUserTaskId(mUserId);
                 mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
@@ -169,7 +175,14 @@ public class NewTaskFragment extends DialogFragment {
 
                 mTask.setPathPhoto(mNameOfFile);
                 mDatabase.getDemoDao().insertTask(mTask);
-                mOkClickedCallback.okClicked();
+                mSaveClickedCallback.newTaskSaveClicked();
+                dismiss();
+            }
+        });
+
+        mButtonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dismiss();
             }
         });
@@ -192,7 +205,7 @@ public class NewTaskFragment extends DialogFragment {
             }
         });
 
-        mButtonPhoto.setOnClickListener(new View.OnClickListener() {
+        mButtonTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -237,6 +250,7 @@ public class NewTaskFragment extends DialogFragment {
         });
     }
 
+
     private Uri getUriForFile() {
         return FileProvider.getUriForFile(
                 getContext(),
@@ -245,41 +259,8 @@ public class NewTaskFragment extends DialogFragment {
         );
     }
 
-    public interface OkClickedCallback {
-        void okClicked();
+
+    public interface SaveClickedCallback {
+        void newTaskSaveClicked();
     }
-
-    private void grantWriteUriToAllResolvedActivities(Intent takePictureIntent, Uri photoUri) {
-        List<ResolveInfo> activities = getActivity().getPackageManager()
-                .queryIntentActivities(
-                        takePictureIntent,
-                        PackageManager.MATCH_DEFAULT_ONLY);
-
-        for (ResolveInfo activity : activities) {
-            getActivity().grantUriPermission(
-                    activity.activityInfo.packageName,
-                    photoUri,
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        }
-    }
-
-    private void takePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            if (mPhotoFile != null && takePictureIntent
-                    .resolveActivity(getActivity().getPackageManager()) != null) {
-
-                Uri photoUri = getUriForFile();
-
-                grantWriteUriToAllResolvedActivities(takePictureIntent, photoUri);
-
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
-            }
-        } catch (ActivityNotFoundException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
-    }
-
-
 }

@@ -14,7 +14,7 @@ import com.example.managertask.controller.fragment.SignUpFragment;
 
 import java.util.UUID;
 
-public class ContainerActivity extends AppCompatActivity implements LoginFragment.UserSignupCallback,
+public class ContainerActivity extends AppCompatActivity implements LoginFragment.UserSignUpCallback,
         LoginFragment.UserLoginCallback, LoginFragment.AdminLoginCallback {
 
     @Override
@@ -31,6 +31,7 @@ public class ContainerActivity extends AppCompatActivity implements LoginFragmen
         }
     }
 
+
     @Override
     public void signUpClicked() {
         getSupportFragmentManager().beginTransaction()
@@ -46,6 +47,7 @@ public class ContainerActivity extends AppCompatActivity implements LoginFragmen
         startActivity(intent);
     }
 
+
     @Override
     public void AdminLoginClicked() {
         getSupportFragmentManager()
@@ -54,6 +56,7 @@ public class ContainerActivity extends AppCompatActivity implements LoginFragmen
                 .addToBackStack(null)
                 .commit();
     }
+
 
     public static Intent newIntent(Context context) {
         return new Intent(context, ContainerActivity.class);

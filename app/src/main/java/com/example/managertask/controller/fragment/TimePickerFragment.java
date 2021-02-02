@@ -25,15 +25,12 @@ import java.util.Date;
 
 public class TimePickerFragment extends DialogFragment {
 
-    public static final String EXTRA_USER_SELECTED_TIME = "com.example.managertask.userselectedtime";
-    public static final String ARGS_TASK_TIME = "taskTime";
-    private static final String ERROR = "error";
     private TimePicker mTimePicker;
     private Timestamp mTaskTime;
 
-    public TimePickerFragment() {
-
-    }
+    private static final String TAG = TimePickerFragment.class.getSimpleName();
+    private static final String ARGS_TASK_TIME = "taskTime";
+    public static final String EXTRA_USER_SELECTED_TIME = "com.example.managertask.userselectedtime";
 
     public static TimePickerFragment newInstance(Timestamp taskTime) {
         TimePickerFragment fragment = new TimePickerFragment();
@@ -43,20 +40,26 @@ public class TimePickerFragment extends DialogFragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mTaskTime = (Timestamp) getArguments().getSerializable(ARGS_TASK_TIME);
     }
+
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.fragment_time_picker, null);
+        View view = LayoutInflater.from(getContext()).inflate(
+                R.layout.fragment_time_picker,
+                null);
+
         findViews(view);
         initTimePicker();
-        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setView(view)
+
+        AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -71,19 +74,23 @@ public class TimePickerFragment extends DialogFragment {
                             Timestamp userSelectedTime = new Timestamp(date.getTime());
                             sendResult(userSelectedTime);
                         } catch (Exception e) {
-                            Log.e(ERROR, e.getMessage(), e);
+                            Log.e(TAG, e.getMessage(), e);
                         }
                         dismiss();
                     }
                 })
+
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
+
         return dialog;
     }
 
+
     private void findViews(View view) {
-        mTimePicker = view.findViewById(R.id.timepicker);
+        mTimePicker = view.findViewById(R.id.time_picker);
     }
+
 
     private void initTimePicker() {
         Date date = new Date(mTaskTime.getTime());
@@ -94,6 +101,7 @@ public class TimePickerFragment extends DialogFragment {
         mTimePicker.setCurrentHour(hour);
         mTimePicker.setCurrentMinute(minute);
     }
+
 
     private void sendResult(Timestamp userSelectedTime) {
         Fragment fragment = getTargetFragment();

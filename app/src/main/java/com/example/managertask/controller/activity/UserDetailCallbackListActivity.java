@@ -3,10 +3,7 @@ package com.example.managertask.controller.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,8 +12,8 @@ import com.example.managertask.R;
 import com.example.managertask.controller.fragment.TaskDetailFragment;
 import com.example.managertask.controller.fragment.UserTaskListFragment;
 
-public class UserTaskListActivity extends AppCompatActivity implements
-        TaskDetailFragment.SaveDetail, TaskDetailFragment.DeleteTask {
+public class UserDetailCallbackListActivity extends AppCompatActivity implements
+        TaskDetailFragment.SaveDetailCallback, TaskDetailFragment.DeleteDetailCallback {
     private UserTaskListFragment mFragment;
 
     @Override
@@ -37,7 +34,7 @@ public class UserTaskListActivity extends AppCompatActivity implements
     }
 
     public static Intent newIntent(Context context) {
-        return new Intent(context, UserTaskListActivity.class);
+        return new Intent(context, UserDetailCallbackListActivity.class);
     }
 
    /* @Override

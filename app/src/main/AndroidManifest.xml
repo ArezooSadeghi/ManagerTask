@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".controller.activity.UserListActivity"></activity>
-        <activity android:name=".controller.activity.UserTaskListActivity" />
+        <activity android:name=".controller.activity.UserDetailCallbackListActivity" />
         <activity android:name=".controller.activity.ContainerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

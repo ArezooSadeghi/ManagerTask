@@ -9,22 +9,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.managertask.R;
 
 public class RemoveTasksFragment extends DialogFragment {
 
-    private ItemRemoved mCallback;
+    private ItemRemovedAllTasksCallback mItemRemovedAllTasksCallback;
 
-    public RemoveTasksFragment() {
-
-    }
 
     public static RemoveTasksFragment newInstance() {
         RemoveTasksFragment fragment = new RemoveTasksFragment();
@@ -33,36 +24,39 @@ public class RemoveTasksFragment extends DialogFragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setMessage("Are You Sure You Want Remove All Tasks?")
+        return new AlertDialog.Builder(getContext())
+                .setMessage(R.string.remove_all_tasks_question)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mCallback.itemRemovedClicked();
+                        mItemRemovedAllTasksCallback.itemRemovedClicked();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
-        return dialog;
     }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof ItemRemoved) {
-            mCallback = (ItemRemoved) context;
+        if (context instanceof ItemRemovedAllTasksCallback) {
+            mItemRemovedAllTasksCallback = (ItemRemovedAllTasksCallback) context;
         }
     }
 
-    public interface ItemRemoved {
+
+    public interface ItemRemovedAllTasksCallback {
         void itemRemovedClicked();
     }
 }

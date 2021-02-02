@@ -25,9 +25,9 @@ public class LoginFragment extends Fragment {
 
     private Button mButtonSignUp, mButtonLoginAdmin;
     private FloatingActionButton mFabLogin;
-    private EditText mEditTextUseName, mEditTextPassword;
+    private EditText mEditTextUserName, mEditTextPassword;
     private DemoDatabase mDatabase;
-    private UserSignupCallback mUserSignUpCallback;
+    private UserSignUpCallback mUserSignUpCallback;
     private UserLoginCallback mUserLoginCallback;
     private AdminLoginCallback mAdminLoginCallback;
 
@@ -39,11 +39,14 @@ public class LoginFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mDatabase = DemoDatabase.getInstance(getContext());
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,11 +61,12 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof UserSignupCallback) {
-            mUserSignUpCallback = (UserSignupCallback) context;
+        if (context instanceof UserSignUpCallback) {
+            mUserSignUpCallback = (UserSignUpCallback) context;
         }
         if (context instanceof UserLoginCallback) {
             mUserLoginCallback = (UserLoginCallback) context;
@@ -72,17 +76,20 @@ public class LoginFragment extends Fragment {
         }
     }
 
+
     private void findViews(View view) {
         mButtonSignUp = view.findViewById(R.id.btn_sign_up);
         mFabLogin = view.findViewById(R.id.fab_login);
         mButtonLoginAdmin = view.findViewById(R.id.btn_login_admin);
-        mEditTextUseName = view.findViewById(R.id.txt_username);
+        mEditTextUserName = view.findViewById(R.id.txt_username);
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
+
 
     private void initViews() {
         mEditTextPassword.setTransformationMethod(new PasswordTransformationMethod());
     }
+
 
     private void setListeners() {
         mButtonSignUp.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +103,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 List<User> users = mDatabase.getDemoDao().getAllUsers();
-                if (mEditTextUseName.getText().toString().isEmpty()
+                if (mEditTextUserName.getText().toString().isEmpty()
                         || mEditTextPassword.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), R.string.enter_username_password,
                             Toast.LENGTH_SHORT).show();
@@ -108,7 +115,7 @@ public class LoginFragment extends Fragment {
 
                 boolean flag = true;
                 for (User user : users) {
-                    if (user.getUsername().equals(mEditTextUseName.getText().toString())
+                    if (user.getUsername().equals(mEditTextUserName.getText().toString())
                             && (user.getPassword().equals(mEditTextPassword.getText().toString()))) {
                         flag = false;
                         mUserLoginCallback.loginClicked(user.getUserId());
@@ -130,13 +137,16 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public interface UserSignupCallback {
+
+    public interface UserSignUpCallback {
         void signUpClicked();
     }
+
 
     public interface UserLoginCallback {
         void loginClicked(UUID userId);
     }
+
 
     public interface AdminLoginCallback {
         void AdminLoginClicked();

@@ -30,11 +30,14 @@ public class SignUpFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mDatabase = DemoDatabase.getInstance(getContext());
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,11 +51,13 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
+
     private void findViews(View view) {
         mButtonSignUp = view.findViewById(R.id.btn_sign_up);
         mEditTextUsername = view.findViewById(R.id.txt_username);
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
+
 
     private void setListeners() {
         mButtonSignUp.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +90,7 @@ public class SignUpFragment extends Fragment {
             }
         });
     }
+
 
     private void addNewUser() {
         User newUser = new User();
