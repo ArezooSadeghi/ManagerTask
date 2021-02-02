@@ -16,16 +16,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controller.activity.UserListActivity"></activity>
-        <activity android:name=".controller.activity.UsersTaskListActivity" />
-        <activity android:name=".controller.activity.ContainerActivity">
+        <activity
+            android:name=".controller.activity.UserListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".controller.activity.UsersTaskListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".controller.activity.ContainerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.activity.TaskPagerActivity" />
+        <activity
+            android:name=".controller.activity.TaskPagerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
