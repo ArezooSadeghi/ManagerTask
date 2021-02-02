@@ -27,7 +27,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.UUID;
 
-public class TaskPagerActivity extends AppCompatActivity implements NewTaskFragment.Callbacks,
+public class TaskPagerActivity extends AppCompatActivity implements NewTaskFragment.OkClickedCallback,
         TaskDetailFragment.SaveDetail, TaskDetailFragment.DeleteTask,
 RemoveTasksFragment.ItemRemoved{
     private static final String EXTRA_USER_ID = "com.example.managertask.userId";
@@ -48,7 +48,7 @@ RemoveTasksFragment.ItemRemoved{
         findViews();
         setListeners();
         initViews();
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        /*getSupportActionBar().setDisplayShowTitleEnabled(false);*/
         Intent intent = this.getIntent();
         mUserId = (UUID) intent.getSerializableExtra(EXTRA_USER_ID);
     }
@@ -182,7 +182,7 @@ RemoveTasksFragment.ItemRemoved{
         return intent;
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.user_toolbar_menu, menu);
         return true;
@@ -202,5 +202,5 @@ RemoveTasksFragment.ItemRemoved{
             default:
                 return false;
         }
-    }
+    }*/
 }

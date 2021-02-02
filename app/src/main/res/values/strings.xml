@@ -8,8 +8,20 @@
     <string name="todo_tab">TODO</string>
     <string name="empty_recyclerview">There is nothing to do</string>
     <string name="title">Title</string>
+    <string name="please_login">Please Login To Continue</string>
+    <string name="exists_user">Such a user already exists</string>
     <string name="text_checkbox">Done</string>
+    <string name="incorrect_information">username or password is incorrect!</string>
+    <string name="enter_username_password">please enter username and password</string>
+    <string name="not_found_username">Username not found</string>
     <string name="send_report">Send Task Via</string>
+    <string name="login">Login</string>
+    <string name="successful_sign_up">Your registration was successful</string>
+    <string name="admin_login">Login as admin</string>
+    <string name="sign_up">Sign up</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="no_account">Do not have an account?</string>
     <string name="task_report">The %1$s "'s task about %2$s is %3$s in %4$s! </string>
 
 </resources>

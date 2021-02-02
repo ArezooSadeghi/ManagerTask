@@ -2,7 +2,6 @@ package com.example.managertask.controller.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +18,15 @@ import com.example.managertask.model.Admin;
 
 import java.util.List;
 
-public class AdminLoginPageFragment extends Fragment {
+public class AdminLoginFragment extends Fragment {
+
     private EditText mTextUsername, mTextPassword;
     private Button mButtonLogin;
     private DemoDatabase mDatabase;
 
-    public AdminLoginPageFragment() {
 
-    }
-
-    public static AdminLoginPageFragment newInstance() {
-        AdminLoginPageFragment fragment = new AdminLoginPageFragment();
+    public static AdminLoginFragment newInstance() {
+        AdminLoginFragment fragment = new AdminLoginFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -46,10 +43,11 @@ public class AdminLoginPageFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(
-                R.layout.fragment_admin_login_page, container, false);
+                R.layout.fragment_admin_login, container, false);
+
         findViews(view);
-        initViews();
         setListeners();
+
         return view;
     }
 
@@ -57,10 +55,6 @@ public class AdminLoginPageFragment extends Fragment {
         mButtonLogin = view.findViewById(R.id.btn_login_admin);
         mTextUsername = view.findViewById(R.id.txt_admin_username);
         mTextPassword = view.findViewById(R.id.txt_admin_password);
-    }
-
-    private void initViews() {
-        mTextPassword.setTransformationMethod(new PasswordTransformationMethod());
     }
 
     private void setListeners() {
@@ -76,7 +70,7 @@ public class AdminLoginPageFragment extends Fragment {
                     } else {
                         Toast.makeText(
                                 getContext(),
-                                "username or password is incorrect!",
+                                R.string.incorrect_information,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }

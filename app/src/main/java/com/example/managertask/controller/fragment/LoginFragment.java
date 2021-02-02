@@ -16,27 +16,24 @@ import androidx.fragment.app.Fragment;
 import com.example.managertask.R;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.User;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 import java.util.UUID;
 
-public class LoginPageFragment extends Fragment {
+public class LoginFragment extends Fragment {
 
-    private ExtendedFloatingActionButton mButtonLoginAdmin;
-    private Button mButtonSignup, mButtonLogin;
-    private EditText mEditTextUsename, mEditTextPassword;
+    private Button mButtonSignUp, mButtonLoginAdmin;
+    private FloatingActionButton mFabLogin;
+    private EditText mEditTextUseName, mEditTextPassword;
     private DemoDatabase mDatabase;
-    private UserSignup mCallbacks;
-    private UserLogin mCallbacksTaskPager;
-    private AdminLogin mAdminCallback;
+    private UserSignupCallback mUserSignUpCallback;
+    private UserLoginCallback mUserLoginCallback;
+    private AdminLoginCallback mAdminLoginCallback;
 
-    public LoginPageFragment() {
 
-    }
-
-    public static LoginPageFragment newInstance() {
-        LoginPageFragment fragment = new LoginPageFragment();
+    public static LoginFragment newInstance() {
+        LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -52,18 +49,34 @@ public class LoginPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_login_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+
         findViews(view);
         initViews();
         setListeners();
+
         return view;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof UserSignupCallback) {
+            mUserSignUpCallback = (UserSignupCallback) context;
+        }
+        if (context instanceof UserLoginCallback) {
+            mUserLoginCallback = (UserLoginCallback) context;
+        }
+        if (context instanceof AdminLoginCallback) {
+            mAdminLoginCallback = (AdminLoginCallback) context;
+        }
+    }
+
     private void findViews(View view) {
-        mButtonSignup = view.findViewById(R.id.btn_signup);
-        mButtonLogin = view.findViewById(R.id.btn_login);
-        mButtonLoginAdmin = view.findViewById(R.id.fab_login_admin);
-        mEditTextUsename = view.findViewById(R.id.txt_username);
+        mButtonSignUp = view.findViewById(R.id.btn_sign_up);
+        mFabLogin = view.findViewById(R.id.fab_login);
+        mButtonLoginAdmin = view.findViewById(R.id.btn_login_admin);
+        mEditTextUseName = view.findViewById(R.id.txt_username);
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
 
@@ -72,38 +85,38 @@ public class LoginPageFragment extends Fragment {
     }
 
     private void setListeners() {
-        mButtonSignup.setOnClickListener(new View.OnClickListener() {
+        mButtonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallbacks.signupClicked();
+                mUserSignUpCallback.signUpClicked();
             }
         });
 
-        mButtonLogin.setOnClickListener(new View.OnClickListener() {
+        mFabLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<User> users = mDatabase.getDemoDao().getAllUsers();
-                if (mEditTextUsename.getText().toString().equals("")
-                        || mEditTextPassword.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "please enter username and password",
+                if (mEditTextUseName.getText().toString().isEmpty()
+                        || mEditTextPassword.getText().toString().isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.enter_username_password,
                             Toast.LENGTH_SHORT).show();
                 }
                 if (users.size() == 0) {
-                    Toast.makeText(getActivity(), "Username not found",
+                    Toast.makeText(getActivity(), R.string.not_found_username,
                             Toast.LENGTH_SHORT).show();
                 }
 
                 boolean flag = true;
                 for (User user : users) {
-                    if (user.getUsername().equals(mEditTextUsename.getText().toString())
+                    if (user.getUsername().equals(mEditTextUseName.getText().toString())
                             && (user.getPassword().equals(mEditTextPassword.getText().toString()))) {
                         flag = false;
-                        mCallbacksTaskPager.loginClicked(user.getUserId());
+                        mUserLoginCallback.loginClicked(user.getUserId());
                         break;
                     }
                 }
                 if (flag == true) {
-                    Toast.makeText(getActivity(), "Username not found",
+                    Toast.makeText(getActivity(), R.string.not_found_username,
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -112,34 +125,20 @@ public class LoginPageFragment extends Fragment {
         mButtonLoginAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAdminCallback.AdminLoginClicked();
+                mAdminLoginCallback.AdminLoginClicked();
             }
         });
     }
 
-    public interface UserSignup {
-        void signupClicked();
+    public interface UserSignupCallback {
+        void signUpClicked();
     }
 
-    public interface UserLogin {
+    public interface UserLoginCallback {
         void loginClicked(UUID userId);
     }
 
-    public interface AdminLogin {
+    public interface AdminLoginCallback {
         void AdminLoginClicked();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof UserSignup) {
-            mCallbacks = (UserSignup) context;
-        }
-        if (context instanceof UserLogin) {
-            mCallbacksTaskPager = (UserLogin) context;
-        }
-        if (context instanceof AdminLogin) {
-            mAdminCallback = (AdminLogin) context;
-        }
     }
 }

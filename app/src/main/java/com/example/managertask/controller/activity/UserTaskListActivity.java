@@ -40,7 +40,7 @@ public class UserTaskListActivity extends AppCompatActivity implements
         return new Intent(context, UserTaskListActivity.class);
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.admin_toolbar_menu, menu);
         return true;
@@ -60,7 +60,7 @@ public class UserTaskListActivity extends AppCompatActivity implements
             default:
                 return false;
         }
-    }
+    }*/
 
     @Override
     public void saveClicked() {

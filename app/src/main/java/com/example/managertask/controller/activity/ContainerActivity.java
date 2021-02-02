@@ -8,14 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
-import com.example.managertask.controller.fragment.AdminLoginPageFragment;
-import com.example.managertask.controller.fragment.LoginPageFragment;
-import com.example.managertask.controller.fragment.SignupPageFragment;
+import com.example.managertask.controller.fragment.AdminLoginFragment;
+import com.example.managertask.controller.fragment.LoginFragment;
+import com.example.managertask.controller.fragment.SignUpFragment;
 
 import java.util.UUID;
 
-public class ContainerActivity extends AppCompatActivity implements LoginPageFragment.UserSignup,
-        SignupPageFragment.BackClicked, LoginPageFragment.UserLogin, LoginPageFragment.AdminLogin {
+public class ContainerActivity extends AppCompatActivity implements LoginFragment.UserSignupCallback,
+        LoginFragment.UserLoginCallback, LoginFragment.AdminLoginCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,24 +25,20 @@ public class ContainerActivity extends AppCompatActivity implements LoginPageFra
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, LoginPageFragment.newInstance())
+                    .add(R.id.fragment_container, LoginFragment.newInstance())
+                    .addToBackStack(null)
                     .commit();
         }
     }
 
     @Override
-    public void signupClicked() {
+    public void signUpClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, SignupPageFragment.newInstance())
+                .replace(R.id.fragment_container, SignUpFragment.newInstance())
+                .addToBackStack(null)
                 .commit();
     }
 
-    @Override
-    public void backClicked() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, LoginPageFragment.newInstance())
-                .commit();
-    }
 
     @Override
     public void loginClicked(UUID userId) {
@@ -54,7 +50,8 @@ public class ContainerActivity extends AppCompatActivity implements LoginPageFra
     public void AdminLoginClicked() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, AdminLoginPageFragment.newInstance())
+                .replace(R.id.fragment_container, AdminLoginFragment.newInstance())
+                .addToBackStack(null)
                 .commit();
     }
 

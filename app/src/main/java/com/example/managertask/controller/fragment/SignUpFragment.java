@@ -1,6 +1,5 @@
 package com.example.managertask.controller.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
@@ -18,20 +16,15 @@ import com.example.managertask.model.User;
 
 import java.util.List;
 
-public class SignupPageFragment extends Fragment {
+public class SignUpFragment extends Fragment {
 
-    private Button mButtonSignup, mButtonBack;
+    private Button mButtonSignUp;
     private EditText mEditTextUsername, mEditTextPassword;
     private DemoDatabase mDatabase;
-    private BackClicked mCallbacks;
-    private User mUser;
 
-    public SignupPageFragment() {
 
-    }
-
-    public static SignupPageFragment newInstance() {
-        SignupPageFragment fragment = new SignupPageFragment();
+    public static SignUpFragment newInstance() {
+        SignUpFragment fragment = new SignUpFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -47,27 +40,28 @@ public class SignupPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_signup_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_signup, container, false);
+
         findViews(view);
         setListeners();
+
         return view;
     }
 
     private void findViews(View view) {
-        mButtonSignup = view.findViewById(R.id.btn_signup);
-        mButtonBack = view.findViewById(R.id.btn_back);
+        mButtonSignUp = view.findViewById(R.id.btn_sign_up);
         mEditTextUsername = view.findViewById(R.id.txt_username);
         mEditTextPassword = view.findViewById(R.id.txt_password);
     }
 
     private void setListeners() {
-        mButtonSignup.setOnClickListener(new View.OnClickListener() {
+        mButtonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<User> users = mDatabase.getDemoDao().getAllUsers();
-                if (mEditTextUsername.getText().toString().equals("") || mEditTextPassword.getText()
-                        .toString().equals("")) {
-                    Toast.makeText(getActivity(), "please enter username and password",
+                if (mEditTextUsername.getText().toString().isEmpty() || mEditTextPassword.getText()
+                        .toString().isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.enter_username_password,
                             Toast.LENGTH_SHORT).show();
                 } else {
                     if (users.size() == 0) {
@@ -79,7 +73,7 @@ public class SignupPageFragment extends Fragment {
                                     && user.getPassword().equals(mEditTextPassword.getText()
                                     .toString())) {
                                 flag = true;
-                                Toast.makeText(getActivity(), "Such a user already exists",
+                                Toast.makeText(getActivity(), R.string.exists_user,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -90,34 +84,14 @@ public class SignupPageFragment extends Fragment {
                 }
             }
         });
-
-        mButtonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCallbacks.backClicked();
-            }
-        });
     }
-
 
     private void addNewUser() {
         User newUser = new User();
         newUser.setUsername(mEditTextUsername.getText().toString());
         newUser.setPassword(mEditTextPassword.getText().toString());
         mDatabase.getDemoDao().insertUser(newUser);
-        Toast.makeText(getActivity(), "Your registration was successful",
+        Toast.makeText(getActivity(), R.string.successful_sign_up,
                 Toast.LENGTH_SHORT).show();
-    }
-
-    public interface BackClicked {
-        void backClicked();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof BackClicked) {
-            mCallbacks = (BackClicked) context;
-        }
     }
 }

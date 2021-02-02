@@ -113,7 +113,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="15dp"
-        android:backgroundTint="@color/darkmagenta"
+        android:backgroundTint="@color/dark_magenta"
         android:text="Share Task"
         android:textAllCaps="false" />
 
