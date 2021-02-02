@@ -13,29 +13,34 @@ import java.util.List;
 public class UserDiffUtilCallback extends DiffUtil.Callback {
 
     public static final String USER_BUNDLE = "userBundle";
+
     private List<User> mOldUsers = new ArrayList<>();
     private List<User> mNewUsers = new ArrayList<>();
+
 
     public UserDiffUtilCallback(List<User> oldUsers, List<User> newUsers) {
         mOldUsers = oldUsers;
         mNewUsers = newUsers;
     }
 
+
     @Override
     public int getOldListSize() {
         return mOldUsers != null ? mOldUsers.size() : 0;
     }
+
 
     @Override
     public int getNewListSize() {
         return mNewUsers != null ? mNewUsers.size() : 0;
     }
 
+
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return true; /*(mOldUsers.get(oldItemPosition).getUserId().equals(
-                        mNewUsers.get(newItemPosition).getUserId()));*/
+        return true;
     }
+
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
@@ -45,6 +50,7 @@ public class UserDiffUtilCallback extends DiffUtil.Callback {
         }
         return false;
     }
+
 
     @Nullable
     @Override

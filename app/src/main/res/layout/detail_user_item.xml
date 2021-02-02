@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     app:cardCornerRadius="10dp"
     app:cardElevation="5dp"
     app:cardUseCompatPadding="true">
@@ -19,7 +19,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="24dp"
             android:textSize="24sp"
             tools:text="date" />
 
@@ -29,20 +29,21 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="24dp"
             android:layout_toRightOf="@+id/txt_date_task_user_item"
             android:textSize="20sp"
             tools:text="number" />
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_remove"
-            android:layout_width="50dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/remove" />
+            app:icon="@drawable/ic_delete" />
 
     </RelativeLayout>
 

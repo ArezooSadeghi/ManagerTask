@@ -3,7 +3,6 @@ package com.example.managertask.adapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +29,13 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> implements Filterable {
 
-    private static final String TAG = "TDF";
-    private static final int REQUEST_CODE_TDF = 0;
+
     private List<Task> mTasks;
     private List<Task> mTasksFiltered;
     private Fragment mFragment;
+
+    private static final int REQUEST_CODE_TDF = 0;
+    private static final String TAG = TaskAdapter.class.getSimpleName();
 
     public TaskAdapter(List<Task> tasks, Fragment fragment) {
         mTasks = tasks;
@@ -42,13 +43,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         mTasksFiltered = mTasks;
     }
 
+
     public void setTasks(List<Task> tasks) {
         mTasks = tasks;
     }
 
+
     public List<Task> getTasks() {
         return mTasks;
     }
+
 
     @NonNull
     @Override
@@ -59,10 +63,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         return new TaskHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
         holder.bindTask(mTasksFiltered.get(position));
     }
+
 
     @Override
     public void onBindViewHolder(
@@ -76,10 +82,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         }
     }
 
+
     @Override
     public int getItemCount() {
         return mTasksFiltered.size();
     }
+
 
     public void updateTasks(List<Task> newTasks) {
         DiffUtil.DiffResult diffResult =
@@ -88,6 +96,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         mTasks.clear();
         mTasks.addAll(newTasks);
     }
+
 
     @Override
     public Filter getFilter() {
@@ -121,6 +130,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         };
     }
 
+
     public class TaskHolder extends RecyclerView.ViewHolder {
         private TextView mTextViewTitle, mTextViewDate, mTextViewTime;
         private Button mButtonFirstLetter;
@@ -143,13 +153,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
             });
         }
 
+
         private void findViews(@NonNull View itemView) {
-            mTextViewTitle = itemView.findViewById(R.id.txt_row_title);
+            mTextViewTitle = itemView.findViewById(R.id.txt_title);
             mTextViewDate = itemView.findViewById(R.id.txt_date);
             mTextViewTime = itemView.findViewById(R.id.txt_time);
-            mButtonFirstLetter = itemView.findViewById(R.id.fab_first_letter);
+            mButtonFirstLetter = itemView.findViewById(R.id.btn_first_letter);
             mPhoto = itemView.findViewById(R.id.img_task);
         }
+
 
         private void bindTask(Task task) {
             mTask = task;

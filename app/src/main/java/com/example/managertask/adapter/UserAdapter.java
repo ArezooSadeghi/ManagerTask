@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,13 +31,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         mCallback = callback;
     }
 
+
     public List<User> getUsers() {
         return mUsers;
     }
 
+
     public void setUsers(List<User> users) {
         mUsers = users;
     }
+
 
     @NonNull
     @Override
@@ -48,10 +51,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         return new UserHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull UserHolder holder, int position) {
         holder.bindUser(mUsers.get(position));
     }
+
 
     @Override
     public void onBindViewHolder(
@@ -65,6 +70,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
             }
         }
     }
+
 
     @Override
     public int getItemCount() {
@@ -80,13 +86,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         mUsers.addAll(newUsers);
     }
 
+
     public interface RemoveCallback {
         void removeClicked();
     }
 
+
     public class UserHolder extends RecyclerView.ViewHolder {
         private TextView mTextViewDate, mTextViewNumberOfTask;
-        private ImageButton mButtonRemove;
+        private Button mButtonRemove;
         private User mUser;
         private DemoDatabase mDatabase = DemoDatabase.getInstance(mContext);
 
@@ -103,6 +111,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
             });
         }
 
+
+        private void findViews(@NonNull View itemView) {
+            mTextViewDate = itemView.findViewById(R.id.txt_date_task_user_item);
+            mTextViewNumberOfTask = itemView.findViewById(R.id.txt_number_task_user_item);
+            mButtonRemove = itemView.findViewById(R.id.btn_remove);
+        }
+
+
         public void bindUser(User user) {
             mUser = user;
             mTextViewDate.setText(DateUtils.dateFormating(user.getRegisteryDate()));
@@ -110,12 +126,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
                     .getDemoDao()
                     .getAllTasksForEveryUser(user.getUserId()).size();
             mTextViewNumberOfTask.setText("" + numberOfTask);
-        }
-
-        private void findViews(@NonNull View itemView) {
-            mTextViewDate = itemView.findViewById(R.id.txt_date_task_user_item);
-            mTextViewNumberOfTask = itemView.findViewById(R.id.txt_number_task_user_item);
-            mButtonRemove = itemView.findViewById(R.id.btn_remove);
         }
     }
 }

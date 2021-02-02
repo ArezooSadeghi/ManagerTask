@@ -3,6 +3,7 @@ package com.example.managertask.controller.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,9 @@ public class ContainerActivity extends AppCompatActivity implements LoginFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_container);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);

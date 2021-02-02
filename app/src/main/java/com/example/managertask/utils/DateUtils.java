@@ -10,12 +10,13 @@ import java.util.Date;
 
 public class DateUtils {
 
-    private static final String ERROR = "error";
+    private static final String TAG = DateUtils.class.getSimpleName();
 
     public static String dateFormating(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return dateFormat.format(date);
     }
+
 
     public static Date stringFormating(String dateString) {
         Date date = new Date();
@@ -23,10 +24,11 @@ public class DateUtils {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             date = (Date) dateFormat.parse(dateString);
         } catch (Exception e) {
-            Log.e(ERROR, e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
         return date;
     }
+
 
     public static Date stringToTime(String time) {
         Date date = new Date();
@@ -38,10 +40,12 @@ public class DateUtils {
         return date;
     }
 
+
     public static String timeToString(Date time) {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         return dateFormat.format(time);
     }
+
 
     public static String nowTimeStringFormating(Timestamp timestamp) {
         Calendar calendar = Calendar.getInstance();
@@ -50,6 +54,7 @@ public class DateUtils {
         return simpleDateFormat.format(calendar.getTime());
     }
 
+
     public static Timestamp stringTimeFormating(String time) {
         Timestamp timestamp = new Timestamp(new Date().getTime());
         try {
@@ -57,10 +62,11 @@ public class DateUtils {
             Date parsedDate = dateFormat.parse(time);
             timestamp = new Timestamp(parsedDate.getTime());
         } catch (Exception e) {
-            Log.e(ERROR, e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
         return timestamp;
     }
+
 
     public static String timeStringFormating(Timestamp time) {
         return new SimpleDateFormat("HH:mm").format(time);

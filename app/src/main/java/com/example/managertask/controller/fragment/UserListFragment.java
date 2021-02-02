@@ -22,9 +22,6 @@ public class UserListFragment extends Fragment {
     private UserAdapter mAdapter;
     private DemoDatabase mDatabase;
 
-    public UserListFragment() {
-
-    }
 
     public static UserListFragment newInstance() {
         UserListFragment fragment = new UserListFragment();
@@ -33,30 +30,38 @@ public class UserListFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mDatabase = DemoDatabase.getInstance(getContext());
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
+
         findViews(view);
         initViews();
         setupAdapter();
+
         return view;
     }
+
 
     private void findViews(View view) {
         mRecyclerViewUserList = view.findViewById(R.id.recycler_view_user_list);
     }
 
+
     private void initViews() {
         mRecyclerViewUserList.setLayoutManager(new LinearLayoutManager(getContext()));
     }
+
 
     private void setupAdapter() {
         List<User> users = mDatabase.getDemoDao().getAllUsers();

@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.managertask.R;
-import com.example.managertask.controller.activity.UserDetailCallbackListActivity;
+import com.example.managertask.controller.activity.UsersTaskListActivity;
 import com.example.managertask.database.DemoDatabase;
 import com.example.managertask.model.Admin;
 
@@ -67,10 +67,13 @@ public class AdminLoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 List<Admin> adminList = mDatabase.getDemoDao().getAllAdmins();
+                if (mTextUsername.getText().toString().isEmpty() || mTextPassword.getText().toString().isEmpty()) {
+                    Toast.makeText(getContext(), R.string.enter_username_password, Toast.LENGTH_SHORT).show();
+                }
                 for (Admin admin : adminList) {
                     if (admin.getUsername().equals(mTextUsername.getText().toString()) &&
                             admin.getPassword().equals(mTextPassword.getText().toString())) {
-                        Intent intent = UserDetailCallbackListActivity.newIntent(getContext());
+                        Intent intent = UsersTaskListActivity.newIntent(getContext());
                         startActivity(intent);
                     } else {
                         Toast.makeText(

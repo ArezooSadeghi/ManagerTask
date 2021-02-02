@@ -20,7 +20,6 @@ public abstract class DemoDatabase extends RoomDatabase {
 
     public final static String DB_NAME = "demo.db";
     private static DemoDatabase sDatabase;
-    private Context mContext;
 
     public synchronized static DemoDatabase getInstance(Context context) {
         if (sDatabase == null) {
@@ -34,18 +33,22 @@ public abstract class DemoDatabase extends RoomDatabase {
         return sDatabase;
     }
 
+
     public abstract DemoDao getDemoDao();
+
 
     private static void addAdmin() {
         Admin admin = new Admin("Arezoo", "6660279350");
         sDatabase.getDemoDao().inserAdmin(admin);
     }
 
+
     public File getPhotoFile(Context context) {
         File filesDir = context.getFilesDir();
         File photoFile = new File(filesDir, getPhotoFileName());
         return photoFile;
     }
+
 
     public String getPhotoFileName() {
         return "IMG_" + UUID.randomUUID() + ".jpg";

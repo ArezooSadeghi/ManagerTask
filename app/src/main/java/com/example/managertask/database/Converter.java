@@ -11,12 +11,11 @@ import java.util.UUID;
 
 public class Converter {
 
-    private static final String ERROR = "error";
-
     @TypeConverter
     public static String dateToString(Date date) {
         return DateUtils.dateFormating(date);
     }
+
 
     @TypeConverter
     public static Date stringToDate(String dateString) {
@@ -29,25 +28,30 @@ public class Converter {
         return DateUtils.stringTimeFormating(time);
     }
 
+
     @TypeConverter
     public static String timestampToString(Timestamp timestamp) {
         return DateUtils.timeStringFormating(timestamp);
     }
+
 
     @TypeConverter
     public static String enumToString(State state) {
         return state.name();
     }
 
+
     @TypeConverter
     public static State stringToEnum(String state) {
         return State.valueOf(state);
     }
 
+
     @TypeConverter
     public static String uuidToString(UUID uuid) {
         return uuid.toString();
     }
+
 
     @TypeConverter
     public static UUID stringToUuid(String uuid) {

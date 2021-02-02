@@ -4,6 +4,6 @@
     android:id="@+id/recycler_view_user_task_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.fragment.UserTaskListFragment">
+    tools:context=".controller.fragment.UsersTaskListFragment">
 
 </androidx.recyclerview.widget.RecyclerView>
